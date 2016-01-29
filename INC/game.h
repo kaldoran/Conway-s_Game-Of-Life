@@ -26,4 +26,5 @@ Game* generateRandomBoard();
 
 void gameTick(Game* g);
 
+Game* loadBoard(char* name);
 #endif

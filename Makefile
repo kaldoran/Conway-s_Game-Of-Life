@@ -1,6 +1,6 @@
 # Release/Debug
 DEBUG=yes
-USE_NCURSES=no
+USE_NCURSES=yes
 
 # Directories
 SRC_DIR = SRC

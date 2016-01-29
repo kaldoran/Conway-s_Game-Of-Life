@@ -5,7 +5,6 @@ void initNCurses() {
 	#ifndef NCURSES 
 		return; 
 	#endif
-	fprintf(stderr, "YOLO");
 	initscr();
 	noecho();
 }
@@ -15,6 +14,8 @@ void endNCurses() {
 	#ifndef NCURSES 
 		return;
 	#endif
+	printw("End of generation\nUse anykey for leave\n");
+	refresh();
 	getch();
 	endwin();
 }

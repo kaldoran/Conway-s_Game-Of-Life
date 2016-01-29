@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <curses.h>
 
+#include "error.h"
 #include "game.h"
 #include "game_struct.h"
 #include "memory.h"
@@ -82,7 +83,7 @@ Game* generateRandomBoard() {
 
 	g = __newGame(rows, cols);
 	
-	fprintf(stderr, "Ligne : %d, Cols : %d\n", rows, cols);
+	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
 	for (rows = 0; rows < g->rows; rows++)
 		for(cols = 0; cols < g->cols; cols++)
 			g->board[POS(cols, rows, g)] = (
@@ -97,6 +98,7 @@ Game* generateRandomBoard() {
 int __neightbourCell(int x, int y, Game *g) {
 	int  total = 0;
 	char *b = g->board;
+
 	if ( x % g->cols != g->cols - 1) {
 		total += b[POS(x + 1, y,     g)]; // Right
 		if ( y < g->rows - 1 ) total += b[POS(x + 1, y + 1, g)]; // Right - Down
@@ -135,4 +137,34 @@ void gameTick(Game* g) {
 
 	free(g->board);
 	g->board = new_board;
+}
+
+
+Game* loadBoard(char* name) { 
+	char reader = ' ';
+	int rows = 0, cols = 0;
+	FILE* fp = NULL;	
+	Game *g = NULL;	
+
+	if ( (fp = fopen(name, "r")) == NULL ) return NULL;
+	if ( fscanf(fp, "Rows : %d\nCols : %d\n", &rows, &cols) != 2) { fclose(fp); return NULL; }
+
+	g = __newGame(rows, cols);
+
+	rows = 0; cols = 0; // Reinit variable
+	
+	while ( (reader = fgetc(fp)) != EOF ) {
+		if ( reader == '.' ) reader = DEAD_CELL;
+		if ( reader == '#' ) reader = ALIVE_CELL;
+		
+		g->board[POS(cols, rows, g)] = reader;
+
+		if ( reader == '\n' ) ++rows;
+		if ( ++cols > g->cols ) cols = 0;
+	}
+	
+	fclose(fp);
+
+	if ( cols != g->cols && rows != g->rows ) { freeGame(g); return NULL; }
+	return g;
 }
