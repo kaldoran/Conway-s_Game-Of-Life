@@ -12,9 +12,10 @@ CC = gcc
 CFLAGS = -W -Wall -Wextra -O2 -lncursesw
 BIN = GameOfLife
 
-ifeq ($(USE_NCURSE), yes) 
+ifeq ($(USE_NCURSES), yes) 
 	CFLAGS += -DNCURSES
 endif
+
 ifeq ($(DEBUG), yes) 
 	CFLAGS += -g -DDEBUG
 endif

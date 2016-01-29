@@ -20,7 +20,11 @@ void __printLine(Game* g, int (*pf)(const char *, ...)) {
 
 void gamePrint ( Game* g, int (*pf)(const char *, ...)) {
 	int x, y;
-	
+
+	#ifdef NCURSES
+		move(0, 0);
+	#endif
+
 	(*pf)("Board size : \n");
 	(*pf)("  %d Columns\n", g->cols);
 	(*pf)("  %d rows\n", g->rows);
@@ -30,7 +34,7 @@ void gamePrint ( Game* g, int (*pf)(const char *, ...)) {
 	for ( y = 0; y < g->rows; y++) {
 		(*pf)("| ");
 		for ( x = 0; x < g->cols; x++) {
-			(*pf)("%c", g->board[POS(x, y, g)]);	
+			(*pf)("%c", ((g->board[POS(x, y, g)] == DEAD_CELL) ? '.' : '#'));	
 		}
 		
 		(*pf)(" |\n");
@@ -90,4 +94,48 @@ Game* generateRandomBoard() {
 	return g;
 }
 
+int __neightbourCell(int x, int y, Game *g) {
+	int  total = 0;
+	char *b = g->board;
+	
+	total += b[POS(x + 1, y,     g)]; // Right
+	total += b[POS(x    , y + 1, g)]; // Down
+	total += b[POS(x + 1, y + 1, g)]; // Right - Down
+	
+	if ( x > 0 ) {
+		total += b[POS(x - 1, y    , g)]; // Left
+		total += b[POS(x - 1, y + 1, g)]; // Left - Down
+	}
+	
+	if ( y > 0 ) {
+		total += b[POS(x    , y - 1, g)]; // Up 
+		total += b[POS(x + 1, y - 1, g)]; // Up - Right
+	}
 
+	if ( x > 0 && y > 0 ) 
+		total += b[POS(x - 1, y - 1, g)]; // Up - Left
+
+	return total;
+}
+
+char __process(int x, int y, Game* g) {
+	int neightbour = __neightbourCell(x, y, g);	
+
+	if ( neightbour < 2 || neightbour > 3 ) return DEAD_CELL;
+	else if ( neightbour == 3 )             return ALIVE_CELL;
+	else                                    return g->board[POS(x, y, g)];
+}
+
+void gameTick(Game* g) {
+	int x, y;
+	char* new_board;
+	
+	new_board = __newBoard(g->rows, g->cols);
+	
+	for (y = 0; y < g->rows; y++)
+		for(x = 0; x < g->cols; x++)
+			new_board[POS(x, y, g)] = __process(x, y, g);
+
+	free(g->board);
+	g->board = new_board;
+}

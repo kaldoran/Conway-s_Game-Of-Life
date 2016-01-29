@@ -11,8 +11,8 @@
 #define POURCENT_BEEN_ALIVE 15
 
 
-#define DEAD_CELL '.'
-#define ALIVE_CELL '#'
+#define DEAD_CELL 0
+#define ALIVE_CELL 1
 
 
 #define POS(X, Y, G) (__position(X,Y,G))
@@ -23,5 +23,7 @@ void gamePrint ( Game* g, int (*pf)(const char *, ...));
 void freeGame(Game* g);
 
 Game* generateRandomBoard();
+
+void gameTick(Game* g);
 
 #endif

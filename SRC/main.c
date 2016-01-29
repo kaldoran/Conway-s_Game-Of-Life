@@ -3,12 +3,12 @@
 #include <string.h>
 #include <curses.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "game.h"
 #include "ncurses.h"
 
 Game* loadBoard() { Game* g = NULL; return g; }
-void gameTick(Game* g)  { (void)(g); }
 
 void usage(char* name) {
 	printf("%s <total tick> <file configuration>\n", name);
@@ -32,17 +32,21 @@ int main(int argc, char* argv[]) {
 	// If none given then generate one
 	if ( g == NULL ) g = generateRandomBoard(); 
 
-	while(0 &&  max_tick != 0) { // Inifinit loop if total tick not given
-		gameTick(g);       // Lets the game tick	
-		gamePrint(g, printw);      // Print new evolution of Board
+	initNCurses();
+	
+	while(max_tick != 0) {         // Inifinit loop if total tick not given
+		gameTick(g);       		   // Lets the game tick
+		#ifdef NCURSES
+			gamePrint(g, printw);
+		#else
+			gamePrint(g, printf);
+		#endif
 		--max_tick;
+		usleep(500000);
 	}
 
-	fprintf(stderr, "%p", g);
-	initNCurses();
-	gamePrint(g, printw);
+
 	endNCurses();	
-	
 	freeGame(g);           // Free space we are not in Java
 	
 	exit(EXIT_SUCCESS);
