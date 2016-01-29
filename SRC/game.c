@@ -97,23 +97,20 @@ Game* generateRandomBoard() {
 int __neightbourCell(int x, int y, Game *g) {
 	int  total = 0;
 	char *b = g->board;
-	
-	total += b[POS(x + 1, y,     g)]; // Right
-	total += b[POS(x    , y + 1, g)]; // Down
-	total += b[POS(x + 1, y + 1, g)]; // Right - Down
-	
-	if ( x > 0 ) {
-		total += b[POS(x - 1, y    , g)]; // Left
-		total += b[POS(x - 1, y + 1, g)]; // Left - Down
-	}
-	
-	if ( y > 0 ) {
-		total += b[POS(x    , y - 1, g)]; // Up 
-		total += b[POS(x + 1, y - 1, g)]; // Up - Right
+	if ( x % g->cols != g->cols - 1) {
+		total += b[POS(x + 1, y,     g)]; // Right
+		if ( y < g->rows - 1 ) total += b[POS(x + 1, y + 1, g)]; // Right - Down
+		if ( y > 0 )           total += b[POS(x + 1, y - 1, g)]; // Up - Right
 	}
 
-	if ( x > 0 && y > 0 ) 
-		total += b[POS(x - 1, y - 1, g)]; // Up - Left
+	if ( x % g->cols != 0 ) { 
+		total += b[POS(x - 1, y    , g)]; // Left
+		if ( y < g->rows - 1 ) total += b[POS(x - 1, y + 1, g)]; // Left - Down
+		if ( y > 0 )           total += b[POS(x - 1, y - 1, g)]; // Up - Left
+	}
+
+	if ( y < g->rows - 1 ) total += b[POS(x    , y + 1, g)]; // Down
+	if ( y > 0 )           total += b[POS(x    , y - 1, g)]; // Up 
 
 	return total;
 }

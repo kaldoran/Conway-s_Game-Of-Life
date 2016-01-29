@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
 	int max_tick = -1; 
 	Game* g = NULL; 
 
-	if ( argc == 1 ) usage(argv[0]);           // No arg - print manual
+	//if ( argc == 1 ) usage(argv[0]);           // No arg - print manual
 	if ( argc >= 2 ) max_tick = atoi(argv[1]); // Use total tick if given
 	if ( argc >= 3 ) g = loadBoard(argv[2]);   // Use file if given
 	
@@ -42,9 +42,8 @@ int main(int argc, char* argv[]) {
 			gamePrint(g, printf);
 		#endif
 		--max_tick;
-		usleep(500000);
+		usleep(400000);
 	}
-
 
 	endNCurses();	
 	freeGame(g);           // Free space we are not in Java
