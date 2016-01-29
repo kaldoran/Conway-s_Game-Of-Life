@@ -4,13 +4,10 @@
 void initNCurses() {
 	initscr();
 	noecho();
-
-	endwin();
 }
 
 
 void endNCurses() {
-	printw("End of generation\nPress any key for exit\n");
 	getch();
 	endwin();
 }
