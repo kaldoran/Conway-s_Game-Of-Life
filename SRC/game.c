@@ -7,20 +7,20 @@
 #include "game_struct.h"
 #include "memory.h"
 
-int __position(int x, int y, Game* g) {
+int __position(unsigned int x, unsigned int y, Game* g) {
 	return g->cols * y + x;
 }
 
 void __printLine(Game* g, int (*pf)(const char *, ...)) {
-	int i = 0;
+	unsigned int i = 0;
 	(*pf)("+");
 	for ( i = 0; i < g->cols + 2; i++ ) // the 2 '+' 
 		(*pf)("-");
 	(*pf)("+\n");
 }
 
-void gamePrint ( Game* g, int (*pf)(const char *, ...)) {
-	int x, y;
+void __gamePrint ( Game* g, int (*pf)(const char *, ...)) {
+	unsigned int x, y;
 
 	#ifdef NCURSES
 		move(0, 0);
@@ -46,14 +46,33 @@ void gamePrint ( Game* g, int (*pf)(const char *, ...)) {
 	#ifdef NCURSES
 		refresh();
 	#endif
+
+	DEBUG_MSG("Print board finish\n");
 }
 
-char* __newBoard(int rows, int cols) {
+void gamePrintInfo(Game* g, int max_tick) {
+	#ifndef PRINT
+	 	return;
+	#endif
+
+	int (*printFunc)(const char*, ...);	
+	printFunc = 
+		#ifdef NCURSES 
+			&printw;
+		#else 
+			&printf; 
+		#endif
+
+	printFunc("%d Generation left.\n", max_tick);
+	__gamePrint(g, printFunc);
+}
+
+char* __newBoard(unsigned int rows, unsigned int cols) {
 	char* board = NEW_ALLOC_K(rows * cols, char);
 	return board;
 }
 
-Game* __newGame(int rows, int cols) {
+Game* __newGame(unsigned int rows, unsigned int cols) {
 	Game* g = NEW_ALLOC(Game);
 	
 	g->rows = rows;
@@ -75,7 +94,7 @@ void freeGame(Game* g)  {
 
 Game* generateRandomBoard() {
 
-	int rows = 0, cols = 0;
+	unsigned int rows = 0, cols = 0;
 	Game* g;
 		
 	rows = rand() % ( MAX_ROWS_SIZE - MIN_ROWS_SIZE) + MIN_ROWS_SIZE;
@@ -91,12 +110,12 @@ Game* generateRandomBoard() {
 					DEAD_CELL: 
 					ALIVE_CELL
                 );			
-
+	DEBUG_MSG("Generate random finish");
 	return g;
 }
 
-int __neightbourCell(int x, int y, Game *g) {
-	int  total = 0;
+int __neightbourCell(unsigned int x, unsigned int y, Game *g) {
+	unsigned int total = 0;
 	char *b = g->board;
 
 	if ( x % g->cols != g->cols - 1) {
@@ -117,8 +136,8 @@ int __neightbourCell(int x, int y, Game *g) {
 	return total;
 }
 
-char __process(int x, int y, Game* g) {
-	int neightbour = __neightbourCell(x, y, g);	
+char __process(unsigned int x, unsigned int y, Game* g) {
+	unsigned int neightbour = __neightbourCell(x, y, g);	
 
 	if ( neightbour < 2 || neightbour > 3 ) return DEAD_CELL;
 	else if ( neightbour == 3 )             return ALIVE_CELL;
@@ -126,7 +145,7 @@ char __process(int x, int y, Game* g) {
 }
 
 void gameTick(Game* g) {
-	int x, y;
+	unsigned int x, y;
 	char* new_board;
 	
 	new_board = __newBoard(g->rows, g->cols);
@@ -137,12 +156,14 @@ void gameTick(Game* g) {
 
 	free(g->board);
 	g->board = new_board;
+
+	DEBUG_MSG("Game tick finish");
 }
 
 
 Game* loadBoard(char* name) { 
 	char reader = ' ';
-	int rows = 0, cols = 0;
+	unsigned int rows = 0, cols = 0;
 	FILE* fp = NULL;	
 	Game *g = NULL;	
 
@@ -151,6 +172,7 @@ Game* loadBoard(char* name) {
 
 	g = __newGame(rows, cols);
 
+	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
 	rows = 0; cols = 0; // Reinit variable
 	
 	while ( (reader = fgetc(fp)) != EOF ) {

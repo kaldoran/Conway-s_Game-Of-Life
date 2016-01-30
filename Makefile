@@ -1,6 +1,7 @@
 # Release/Debug
 DEBUG=yes
-USE_NCURSES=yes
+PRINT=no
+NCURSES=no
 
 # Directories
 SRC_DIR = SRC
@@ -12,7 +13,11 @@ CC = gcc
 CFLAGS = -W -Wall -Wextra -O2 -lncursesw
 BIN = GameOfLife
 
-ifeq ($(USE_NCURSES), yes) 
+ifeq ($(PRINT), yes) 
+ 	CFLAGS += -DPRINT
+endif
+
+ifeq ($(NCURSES), yes) 
 	CFLAGS += -DNCURSES
 endif
 

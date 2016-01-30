@@ -20,38 +20,34 @@ void usage(char* name) {
 int main(int argc, char* argv[]) {
 
 	srand(time(NULL));
-	int (*printFunc)(const char*, ...);	
-	printFunc = 
-		#ifdef NCURSES 
-			&printw;
-		#else 
-			&printf; 
-		#endif
 	int max_tick = -1; 
 	Game* g = NULL; 
+	
+	clock_t t;
 
 	//if ( argc == 1 ) usage(argv[0]);           // No arg - print manual
-	if ( argc >= 2 ) max_tick = atoi(argv[1]); // Use total tick if given
-	if ( argc >= 3 ) g = loadBoard(argv[2]);   // Use file if given
+	if ( argc >= 2 ) max_tick = atoi(argv[1]);   // Use total tick if given
+	if ( argc >= 3 ) g = loadBoard(argv[2]);     // Use file if given
 
 	// If none given then generate one
 	if ( g == NULL ) g = generateRandomBoard(); 
 
 	initNCurses();
+
+	t = clock();
 	
 	while(max_tick != 0) {         // Inifinit loop if total tick not given
-		#ifdef NCURSES
-			printFunc("%d Generation left.\n", max_tick);
-			gamePrint(g, printFunc);
-		#else
-			printFunc("%d Generation left.\n", max_tick);
-			gamePrint(g, printFunc);
-		#endif
+		gamePrintInfo(g, max_tick);
 		gameTick(g);       		   // Lets the game tick
 		--max_tick;
-		usleep(400000);
+		#ifndef PRINT 
+			usleep(400000);
+		#endif
 	}
+	
+	t = clock() - t;
 
+	DEBUG_MSG("%f taken\n", ((double)t)/CLOCKS_PER_SEC);
 	endNCurses();
 	freeGame(g);           // Free space we are not in Java
 	

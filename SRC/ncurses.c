@@ -2,7 +2,7 @@
 #include <curses.h>
 
 void initNCurses() {
-	#ifndef NCURSES 
+	#if !defined(NCURSES) || !defined(PRINT)
 		return; 
 	#endif
 	initscr();
@@ -11,7 +11,7 @@ void initNCurses() {
 
 
 void endNCurses() {
-	#ifndef NCURSES 
+	#if !defined(NCURSES) || !defined(PRINT)
 		return;
 	#endif
 	printw("End of generation\nUse anykey for leave\n");

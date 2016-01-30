@@ -4,7 +4,7 @@
 
 typedef struct {
 	char *board; // The board as an array of 0's and 1's.
-	int cols; // The number of columns.
-	int rows; // The number of rows.
+	unsigned int cols; // The number of columns.
+	unsigned int rows; // The number of rows.
 } Game;
 #endif

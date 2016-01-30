@@ -10,15 +10,12 @@
 #define MAX_ROWS_SIZE 30
 #define POURCENT_BEEN_ALIVE 15
 
-
 #define DEAD_CELL 0
 #define ALIVE_CELL 1
 
-
 #define POS(X, Y, G) (__position(X,Y,G))
 
-void gamePrint ( Game* g, int (*pf)(const char *, ...));
-// void gamePrint ( Game* g, void (*printingFunction)(char *) );
+void gamePrintInfo ( Game* g, int max_tick);
 
 void freeGame(Game* g);
 
