@@ -148,11 +148,11 @@ char __process(unsigned int x, unsigned int y, Game* g) {
 	else                                    return g->current_board[POS(x, y, g)];
 }
 
-void gameTick(Game* g) {
+void gameTickP(Game* g, threadParam tp) {
 	unsigned int x, y;
-		
+	
 	for (y = 0; y < g->rows; y++)
-		for(x = 0; x < g->cols; x++)
+		for(x = tp.min; x < tp.max; x++)
 			g->next_board[POS(x, y, g)] = __process(x, y, g);
 
 	DEBUG_MSG("Game tick finish");

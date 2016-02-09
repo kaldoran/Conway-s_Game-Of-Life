@@ -1,8 +1,11 @@
 #ifndef THREAD_STRUCT
 #define THREAD_STRUCT
 
+#include "game_struct.h"
+
 typedef struct threadParam {
-	int min;
-	int max;
+	unsigned int min;
+	unsigned int max;
+	Game *g;
 } threadParam;
 #endif

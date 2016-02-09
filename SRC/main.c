@@ -18,7 +18,10 @@ int main(int argc, char* argv[]) {
 	Option o;
 	Game* g = NULL; 
 	
-	creatNThread(2);
+	g = generateRandomBoard();
+	creatNThread(2, g);
+
+	exit(EXIT_FAILURE);
 	
 	o = getOption(argc, argv);									// Get all option
 	if ( *o.file_path != '\0' ) g = loadBoard(o.file_path);     // Use file if given
