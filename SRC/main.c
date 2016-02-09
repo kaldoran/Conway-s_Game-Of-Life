@@ -8,47 +8,33 @@
 #include "error.h"
 #include "game.h"
 #include "ncurses.h"
-
-void usage(char* name) {
-	printf("%s <total tick> <file configuration>\n", name);
-	printf("\t<total tick> : total generation needed\n");
-	printf("\t<file configuration> : Location of the file to load\n");
-	
-	exit(EXIT_SUCCESS);
-}
+#include "option.h"
 
 int main(int argc, char* argv[]) {
 
 	srand(time(NULL));
-	int max_tick = -1; 
+
+	Option o;
 	Game* g = NULL; 
 	
-	clock_t t;
+	o = getOption(argc, argv);									// Get all option
+	if ( *o.file_path != '\0' ) g = loadBoard(o.file_path);     // Use file if given
 
-	//if ( argc == 1 ) usage(argv[0]);           // No arg - print manual
-	if ( argc >= 2 ) max_tick = atoi(argv[1]);   // Use total tick if given
-	if ( argc >= 3 ) g = loadBoard(argv[2]);     // Use file if given
+	if ( g == NULL ) g = generateRandomBoard(); 	            // if load fail or no grid given
+	if ( o.use_ncurses ) initNCurses();
 
-	// If none given then generate one
-	if ( g == NULL ) g = generateRandomBoard(); 
-
-	initNCurses();
-
-	t = clock();
-	
-	while(max_tick != 0) {         // Inifinit loop if total tick not given
-		gamePrintInfo(g, max_tick);
+	while(o.max_tick != 0) {         // Inifinit loop if total tick not given
+		gamePrintInfo(g, o);
 		gameTick(g);       		   // Lets the game tick
-		--max_tick;
-		#ifndef PRINT 
+		__swapGrid(g);
+		--o.max_tick;
+		#ifdef PRINT 
 			usleep(400000);
 		#endif
 	}
 	
-	t = clock() - t;
+	if ( o.use_ncurses) endNCurses();
 
-	DEBUG_MSG("%f taken\n", ((double)t)/CLOCKS_PER_SEC);
-	endNCurses();
 	freeGame(g);           // Free space we are not in Java
 	
 	exit(EXIT_SUCCESS);

@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "game_struct.h"
+#include "option_struct.h"
 
 #define MIN_COLS_SIZE 5
 #define MIN_ROWS_SIZE 3
@@ -15,13 +16,15 @@
 
 #define POS(X, Y, G) (__position(X,Y,G))
 
-void gamePrintInfo ( Game* g, int max_tick);
+void gamePrintInfo ( Game* g, Option o);
 
 void freeGame(Game* g);
 
 Game* generateRandomBoard();
 
 void gameTick(Game* g);
+
+void __swapGrid(Game* g);
 
 Game* loadBoard(char* name);
 #endif

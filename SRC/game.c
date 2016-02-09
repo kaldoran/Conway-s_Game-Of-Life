@@ -13,19 +13,20 @@ int __position(unsigned int x, unsigned int y, Game* g) {
 
 void __printLine(Game* g, int (*pf)(const char *, ...)) {
 	unsigned int i = 0;
+
 	(*pf)("+");
 	for ( i = 0; i < g->cols + 2; i++ ) // the 2 '+' 
 		(*pf)("-");
 	(*pf)("+\n");
+
 }
 
-void __gamePrint ( Game* g, int (*pf)(const char *, ...)) {
+void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	unsigned int x, y;
 
-	#ifdef NCURSES
+	if ( *pf == printw )
 		move(0, 0);
-	#endif
-
+	
 	(*pf)("Board size : \n");
 	(*pf)("  %d Columns\n", g->cols);
 	(*pf)("  %d rows\n", g->rows);
@@ -35,7 +36,7 @@ void __gamePrint ( Game* g, int (*pf)(const char *, ...)) {
 	for ( y = 0; y < g->rows; y++) {
 		(*pf)("| ");
 		for ( x = 0; x < g->cols; x++) {
-			(*pf)("%c", ((g->board[POS(x, y, g)] == DEAD_CELL) ? '.' : '#'));	
+			(*pf)("%c", ((g->current_board[POS(x, y, g)] == DEAD_CELL) ? '.' : '#'));	
 		}
 		
 		(*pf)(" |\n");
@@ -43,27 +44,29 @@ void __gamePrint ( Game* g, int (*pf)(const char *, ...)) {
 	
 	__printLine(g, pf);
 	
-	#ifdef NCURSES
+	if ( *pf == printw)
 		refresh();
-	#endif
 
 	DEBUG_MSG("Print board finish\n");
 }
 
-void gamePrintInfo(Game* g, int max_tick) {
+void __swapGrid(Game* g) {
+	char *tmp = g->current_board;
+	g->current_board = g->next_board;
+	g->next_board = tmp;
+}
+
+void gamePrintInfo(Game* g, Option o) {
 	#ifndef PRINT
 	 	return;
 	#endif
 
 	int (*printFunc)(const char*, ...);	
-	printFunc = 
-		#ifdef NCURSES 
-			&printw;
-		#else 
-			&printf; 
-		#endif
+	printFunc = ( o.use_ncurses ) ? &printw : &printf; 
 
-	printFunc("%d Generation left.\n", max_tick);
+	if ( o.max_tick >= 0 )
+		printFunc("%d Generation left.\n", o.max_tick);
+	
 	__gamePrint(g, printFunc);
 }
 
@@ -78,8 +81,9 @@ Game* __newGame(unsigned int rows, unsigned int cols) {
 	g->rows = rows;
 	g->cols = cols;
 	
-	g->board = __newBoard(rows, cols);
-	
+	g->current_board = __newBoard(rows, cols);
+	g->next_board = __newBoard(rows, cols);
+
 	return g;
 }
 
@@ -87,8 +91,8 @@ void freeGame(Game* g)  {
 	if ( g == NULL ) 
 		return;
 
-	if ( g->board != NULL ) 
-		free(g->board);
+	free(g->current_board);
+	free(g->next_board);
 	free(g);
 }
 
@@ -105,7 +109,7 @@ Game* generateRandomBoard() {
 	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
 	for (rows = 0; rows < g->rows; rows++)
 		for(cols = 0; cols < g->cols; cols++)
-			g->board[POS(cols, rows, g)] = (
+			g->current_board[POS(cols, rows, g)] = (
 				( rand() % 100 >= POURCENT_BEEN_ALIVE ) ? 
 					DEAD_CELL: 
 					ALIVE_CELL
@@ -116,7 +120,7 @@ Game* generateRandomBoard() {
 
 int __neightbourCell(unsigned int x, unsigned int y, Game *g) {
 	unsigned int total = 0;
-	char *b = g->board;
+	char *b = g->current_board;
 
 	if ( x % g->cols != g->cols - 1) {
 		total += b[POS(x + 1, y,     g)]; // Right
@@ -141,21 +145,15 @@ char __process(unsigned int x, unsigned int y, Game* g) {
 
 	if ( neightbour < 2 || neightbour > 3 ) return DEAD_CELL;
 	else if ( neightbour == 3 )             return ALIVE_CELL;
-	else                                    return g->board[POS(x, y, g)];
+	else                                    return g->current_board[POS(x, y, g)];
 }
 
 void gameTick(Game* g) {
 	unsigned int x, y;
-	char* new_board;
-	
-	new_board = __newBoard(g->rows, g->cols);
-	
+		
 	for (y = 0; y < g->rows; y++)
 		for(x = 0; x < g->cols; x++)
-			new_board[POS(x, y, g)] = __process(x, y, g);
-
-	free(g->board);
-	g->board = new_board;
+			g->next_board[POS(x, y, g)] = __process(x, y, g);
 
 	DEBUG_MSG("Game tick finish");
 }
@@ -179,7 +177,7 @@ Game* loadBoard(char* name) {
 		if ( reader == '.' ) reader = DEAD_CELL;
 		if ( reader == '#' ) reader = ALIVE_CELL;
 		
-		g->board[POS(cols, rows, g)] = reader;
+		g->current_board[POS(cols, rows, g)] = reader;
 
 		if ( reader == '\n' ) ++rows;
 		if ( ++cols > g->cols ) cols = 0;

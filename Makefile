@@ -1,7 +1,6 @@
 # Release/Debug
 DEBUG=yes
-PRINT=no
-NCURSES=no
+PRINT=yes
 
 # Directories
 SRC_DIR = SRC
@@ -15,10 +14,6 @@ BIN = GameOfLife
 
 ifeq ($(PRINT), yes) 
  	CFLAGS += -DPRINT
-endif
-
-ifeq ($(NCURSES), yes) 
-	CFLAGS += -DNCURSES
 endif
 
 ifeq ($(DEBUG), yes) 
