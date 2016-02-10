@@ -17,7 +17,8 @@ int main(int argc, char* argv[]) {
 
 	Option o;
 	Game* g = NULL; 
-	
+	TickParam *tp = NULL;
+
 	g = generateRandomBoard();
 	creatNThread(2, g);
 
@@ -29,9 +30,13 @@ int main(int argc, char* argv[]) {
 	if ( g == NULL ) g = generateRandomBoard(); 	            // if load fail or no grid given
 	if ( o.use_ncurses ) initNCurses();
 
+	if ( o.nb_thread == 0 ) {
+		tp = newTickParam(0, g->cols, g);
+	}
+
 	while(o.max_tick != 0) {         // Inifinit loop if total tick not given
 		gamePrintInfo(g, o);
-		gameTick(g);       		   // Lets the game tick
+		gameTick(tp);       		   // Lets the game tick
 		__swapGrid(g);
 		--o.max_tick;
 		#ifdef PRINT 

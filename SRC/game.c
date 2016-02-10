@@ -56,6 +56,22 @@ void __swapGrid(Game* g) {
 	g->next_board = tmp;
 }
 
+TickParam *newTickParam(int min, int max, Game* g) {
+	TickParam *tp;
+
+	if ( min > max ) {
+		fprintf(stderr, "max need to greater than min\n");
+		return NULL;
+	}
+
+	tp = NEW_ALLOC(TickParam);
+	tp->min = min;
+	tp->max = max;
+	tp->g = g;
+
+	return tp;	
+}
+
 void gamePrintInfo(Game* g, Option o) {
 	#ifndef PRINT
 	 	return;
@@ -148,11 +164,13 @@ char __process(unsigned int x, unsigned int y, Game* g) {
 	else                                    return g->current_board[POS(x, y, g)];
 }
 
-void gameTickP(Game* g, threadParam tp) {
+
+void gameTick(TickParam* tp) {
+	Game *g = tp->g;
 	unsigned int x, y;
 	
 	for (y = 0; y < g->rows; y++)
-		for(x = tp.min; x < tp.max; x++)
+		for(x = tp->min; x < tp->max; x++)
 			g->next_board[POS(x, y, g)] = __process(x, y, g);
 
 	DEBUG_MSG("Game tick finish");

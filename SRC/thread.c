@@ -4,10 +4,17 @@
 #include "memory.h"
 #include "thread.h"
 #include "game.h"
-void a(void *p) {
-	threadParam *tp = (threadParam*) p;
+#include "tick_param_struct.h"
 
-	fprintf(stderr, "Salut - %p\n", (threadParam*) (tp->g));
+void a(void *p) {
+
+	TickParam *tp = (TickParam*) p;
+
+	while(1) {
+		gameTick(tp);
+		fprintf(stderr, "Salut - %p\n", (TickParam*) (tp->g));
+
+	}
 }
 
 pthread_t *creatNThread(int n, Game *g) {
@@ -18,7 +25,7 @@ pthread_t *creatNThread(int n, Game *g) {
 
 	for ( i = 0; i < n; i++) {
 
-		threadParam *tp = NEW_ALLOC(threadParam);
+		TickParam *tp = NEW_ALLOC(TickParam);
 		tp->g = g;
 		pthread_attr_t* attrs = NEW_ALLOC(pthread_attr_t);
 		pthread_attr_init(attrs);

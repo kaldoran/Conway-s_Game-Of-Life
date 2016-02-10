@@ -20,7 +20,8 @@ Option __setDefaultValue() {
 	o.use_ncurses = false;
 	o.file_path = "\0";
 	o.max_tick = -1;
-	
+	o.nb_thread = 0;
+
 	return o;
 }
 
@@ -45,7 +46,7 @@ Option getOption(int argc, char **argv) {
 				o.use_ncurses = true;
 				break;
 			case 'p':
-				fprintf(stderr, "YOLOy");
+				o.nb_thread = MAX(atoi(optarg), 0);
 				break;
 			default: 
 				exit(EXIT_FAILURE);
