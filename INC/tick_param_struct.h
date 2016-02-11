@@ -4,8 +4,8 @@
 #include "game_struct.h"
 
 typedef struct TickParam {
-	unsigned int min;
-	unsigned int max;
-	Game *g;
+	unsigned int min; // Where do the thread need to start process cell
+	unsigned int max; // And where did he need to stop
+	Game *g;          // Pointer to the board
 } TickParam;
 #endif
