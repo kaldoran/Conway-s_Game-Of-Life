@@ -3,7 +3,7 @@
 
 #include "option_struct.h"
 
-#define OPT_LIST "hf:t:np:" // FILE
+#define OPT_LIST "hf:t:np:r:c:" // FILE
 
 /** Use the definition defined by David Titarenco
  *  On StackOverFlow http://stackoverflow.com/questions/3437404/min-and-max-in-c

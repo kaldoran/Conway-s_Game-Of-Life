@@ -8,6 +8,8 @@ typedef struct Option {
 	char* file_path;
 	bool use_ncurses;
 	unsigned int nb_thread;
+	unsigned int rows;
+	unsigned int cols;
 } Option;
 
 #endif

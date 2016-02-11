@@ -24,7 +24,7 @@ void gamePrintInfo ( Game* g, Option o);
 
 void freeGame(Game* g);
 
-Game* generateRandomBoard();
+Game* generateRandomBoard(Option o);
 
 void gameTick(TickParam *tp);
 

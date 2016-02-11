@@ -19,24 +19,24 @@ int main(int argc, char* argv[]) {
 	Game* g = NULL; 
 	TickParam *tp = NULL;
 
-	g = generateRandomBoard();
-	creatNThread(2, g);
-
-	exit(EXIT_FAILURE);
-	
-	o = getOption(argc, argv);									// Get all option
+	o = getOption(argc, argv);									// Get all option	
 	if ( *o.file_path != '\0' ) g = loadBoard(o.file_path);     // Use file if given
 
-	if ( g == NULL ) g = generateRandomBoard(); 	            // if load fail or no grid given
+	if ( g == NULL ) g = generateRandomBoard(o); 	            // if load fail or no grid given
 	if ( o.use_ncurses ) initNCurses();
 
 	if ( o.nb_thread == 0 ) {
-		tp = newTickParam(0, g->cols, g);
+		tp = newTickParam(0, g->cols - 1, g);
 	}
 
 	while(o.max_tick != 0) {         // Inifinit loop if total tick not given
 		gamePrintInfo(g, o);
-		gameTick(tp);       		   // Lets the game tick
+		
+		if ( o.nb_thread == 0 )
+			gameTick(tp);       		   // Lets the game tick
+		else
+			createNThreadF(o.nb_thread, g, false);
+
 		__swapGrid(g);
 		--o.max_tick;
 		#ifdef PRINT 

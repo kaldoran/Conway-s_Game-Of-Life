@@ -1,6 +1,6 @@
 # Release/Debug
 DEBUG=yes
-PRINT=yes
+PRINT=no
 
 # Directories
 SRC_DIR = SRC

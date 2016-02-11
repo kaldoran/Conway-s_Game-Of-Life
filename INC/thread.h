@@ -1,8 +1,10 @@
 #ifndef THREAD
 #define THREAD
 
+#include <stdbool.h>
 #include "game_struct.h"
 
-pthread_t *creatNThread(int n, Game* g);
+bool createNThread(unsigned int n, Game* g);
 
+bool createNThreadF(unsigned int n, Game *g, bool fine_grained);
 #endif

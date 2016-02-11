@@ -44,7 +44,7 @@ void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	
 	__printLine(g, pf);
 	
-	if ( *pf == printw)
+	if ( *pf == printw )
 		refresh();
 
 	DEBUG_MSG("Print board finish\n");
@@ -112,15 +112,12 @@ void freeGame(Game* g)  {
 	free(g);
 }
 
-Game* generateRandomBoard() {
+Game* generateRandomBoard(Option o) {
 
 	unsigned int rows = 0, cols = 0;
 	Game* g;
 		
-	rows = rand() % ( MAX_ROWS_SIZE - MIN_ROWS_SIZE) + MIN_ROWS_SIZE;
-	cols = rand() % ( MAX_COLS_SIZE - MIN_COLS_SIZE) + MIN_COLS_SIZE;	
-
-	g = __newGame(rows, cols);
+	g = __newGame(o.rows, o.cols);
 	
 	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
 	for (rows = 0; rows < g->rows; rows++)
@@ -170,7 +167,7 @@ void gameTick(TickParam* tp) {
 	unsigned int x, y;
 	
 	for (y = 0; y < g->rows; y++)
-		for(x = tp->min; x < tp->max; x++)
+		for(x = tp->min; x <= tp->max; x++)
 			g->next_board[POS(x, y, g)] = __process(x, y, g);
 
 	DEBUG_MSG("Game tick finish");
