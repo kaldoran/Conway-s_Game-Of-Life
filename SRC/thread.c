@@ -23,43 +23,6 @@ bool __joinAllThread(int n, pthread_t *plist) {
 	return success;
 }
 
-bool createNThread(unsigned int n, Game *g) {
-	unsigned int i = 0;
-	bool success = true;
-	int slice_size = 0;
-	pthread_t *plist = NULL;
-
-	if ( n > g->cols ) { 
-		fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols);
-		n = g->cols;
-	}
-
-	plist = NEW_ALLOC_K(n, pthread_t);
-	slice_size = (int) g->cols / n;
-
-	for ( i = 0; i < n; i++) {
-
-		TickParam *tp = NEW_ALLOC(TickParam);
-		
-		tp->g = g;
-		tp->min = i * slice_size;
-		tp->max = tp->min + (slice_size - 1);
-
-		if ( i == n - 1 ) tp->max += g->cols % n;
-
-		DEBUG_MSG("Thread %d process from %d to %d [%d cols]\n", i, tp->min, tp->max, tp->max - tp->min + 1);
-
-		if ( pthread_create(&plist[i], NULL, (void*) gameTick, tp) ) {
-			fprintf(stderr, "Can't create thread %d\n", i); 
-			success = false;
-		}
-	}
-	
-	__joinAllThread(n, plist);
-	
-	return success;
-}
-
 bool createNThreadF(unsigned int n, Game *g, bool fine_grained) {
 	bool success = true;
 	unsigned int slice_size;
