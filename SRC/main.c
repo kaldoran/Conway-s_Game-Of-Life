@@ -29,13 +29,14 @@ int main(int argc, char* argv[]) {
 		tp = newTickParam(0, g->cols - 1, g);
 	}
 
+	fprintf(stderr, "USe : %d\n", o.use_fine_grained);
 	while(o.max_tick != 0) {         // Inifinit loop if total tick not given
 		gamePrintInfo(g, o);
 		
-		if ( o.nb_thread == 0 )
-			gameTick(tp);       		   // Lets the game tick
+		if ( o.nb_thread == 0 )      // if there is 0 thread then do not use thread method 
+			gameTick(tp);       	 // Lets the game tick
 		else
-			createNThreadF(o.nb_thread, g, false);
+			createNThreadF(o.nb_thread, g, o.use_fine_grained);
 
 		__swapGrid(g);
 		--o.max_tick;

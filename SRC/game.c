@@ -24,7 +24,7 @@ void __printLine(Game* g, int (*pf)(const char *, ...)) {
 void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	unsigned int x, y;
 
-	if ( *pf == printw )
+	if ( *pf == printw ) // If we use ncurses we need to replace cursor
 		move(0, 0);
 	
 	(*pf)("Board size : \n");
@@ -44,7 +44,7 @@ void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	
 	__printLine(g, pf);
 	
-	if ( *pf == printw )
+	if ( *pf == printw ) // If we use ncurses we need to refresh the display
 		refresh();
 
 	DEBUG_MSG("Print board finish\n");
