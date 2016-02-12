@@ -31,4 +31,6 @@ void gameTick(TickParam *tp);
 void __swapGrid(Game* g);
 
 Game* loadBoard(char* name);
+
+bool saveBoard(Game *g);
 #endif

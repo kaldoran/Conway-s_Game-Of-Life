@@ -11,6 +11,7 @@ typedef struct Option {
 	unsigned int cols;        // Number of columns to generate          - Default : Random
 	bool use_ncurses;         // Do we use ncurses for the display ?    - Default : false
 	bool use_fine_grained;    // Do we use fine grain in multi thread ? - Default : false
+	bool save_file;           // Do we need to save the last grid ?     - Default : false
 } Option;
 
 #endif

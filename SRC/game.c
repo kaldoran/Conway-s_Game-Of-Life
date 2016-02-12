@@ -119,7 +119,7 @@ Game* generateRandomBoard(Option o) {
 		
 	g = __newGame(o.rows, o.cols);
 	
-	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
+	DEBUG_MSG("Ligne : %d, Cols : %d\n", o.rows, o.cols);
 	for (rows = 0; rows < g->rows; rows++)
 		for(cols = 0; cols < g->cols; cols++)
 			g->current_board[POS(cols, rows, g)] = (
@@ -202,4 +202,22 @@ Game* loadBoard(char* name) {
 
 	if ( cols != g->cols && rows != g->rows ) { freeGame(g); return NULL; }
 	return g;
+}
+
+bool saveBoard(Game *g) {
+	unsigned int i;
+	FILE *fp = NULL;
+
+	if ( (fp = fopen("output.gol", "w")) == NULL ) return false;
+
+	fprintf(fp, "Rows : %d\nCols : %d\n", g->rows, g->cols);
+	for ( i = 0; i < g->cols * g->rows; i++ ) {
+
+		fprintf(fp, "%c", ((g->current_board[i]) ? '#' : '.') );
+		if ( i % g->cols == g->cols - 1 ) fprintf(fp, "\n"); 
+	}
+
+	printf("File saved into : output.gol");
+	return true;
+
 }

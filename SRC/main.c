@@ -51,6 +51,9 @@ int main(int argc, char* argv[]) {
 	if ( o.use_ncurses) // If we use ncurses ( and then init it )
 		endNCurses();   // we need to clear display info
 
+	if ( o.save_file ) 	
+		saveBoard(g);
+
 	if ( o.nb_thread == 0 ) 
 		free(tp);
 

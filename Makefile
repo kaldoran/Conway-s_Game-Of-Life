@@ -1,6 +1,5 @@
 # Release/Debug
 DEBUG=yes
-PRINT=yes
 
 # Directories
 SRC_DIR = SRC
@@ -12,10 +11,6 @@ CC = gcc
 CFLAGS = -W -Wall -Wextra -O2 -lncursesw -lpthread
 BIN = GameOfLife
 
-ifeq ($(PRINT), yes) 
- 	CFLAGS += -DPRINT
-endif
-
 ifeq ($(DEBUG), yes) 
 	CFLAGS += -g -DDEBUG
 endif
@@ -26,6 +21,17 @@ OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 
 .PHONY: clear dir
 .SUFFIXES:
+
+test: rebuild
+test:
+	./test.sh
+
+mesure: rebuild
+mesure:
+	./mesure.sh
+
+display: CFLAGS += -DPRINT
+display: clean all
 
 all: dir $(BIN_DIR)/$(BIN)
 
