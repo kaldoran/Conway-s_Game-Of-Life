@@ -22,7 +22,8 @@ int main(int argc, char* argv[]) {
 	o = getOption(argc, argv);  /* Get all option	 */
 
 	if ( *o.file_path != '\0' ) /* If path file is not empty */
-		g = loadBoard(o.file_path); /* then use the given file [load id] */
+		if ( (g = loadBoard(o.file_path)) == NULL ) /* then use the given file [load id] */
+			fprintf(stderr, "Can't load file %s\n", o.file_path);
 
 	if ( g == NULL ) /* If load of file fail Or no grid given */
 		g = generateRandomBoard(o); /* then create one */

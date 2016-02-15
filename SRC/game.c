@@ -185,19 +185,19 @@ Game* loadBoard(char* name) {
 
 	g = __newGame(rows, cols);
 
-	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
+	DEBUG_MSG("Rows : %d, Cols : %d\n", rows, cols);
 	rows = 0; cols = 0; /* Reinit variable */
 	
 	while ( (reader = fgetc(fp)) != EOF ) {
 		if ( reader == '.' ) reader = DEAD_CELL;
 		if ( reader == '#' ) reader = ALIVE_CELL;
 		
-		g->current_board[POS(cols, rows, g)] = reader;
-
-		if ( reader == '\n' ) ++rows;
-		if ( ++cols > g->cols ) cols = 0;
+		if ( reader == '\n') ++rows;
+		else g->current_board[POS(cols, rows, g)] = reader;
+		
+		if ( ++cols > g->cols ) cols = 0; /* We are going to go over cols due to \n */
 	}
-	
+
 	fclose(fp);
 
 	if ( cols != g->cols && rows != g->rows ) { freeGame(g); return NULL; }
@@ -217,7 +217,9 @@ bool saveBoard(Game *g) {
 		if ( i % g->cols == g->cols - 1 ) fprintf(fp, "\n"); 
 	}
 
-	printf("File saved into : output.gol");
-	return true;
+	printf("File saved into : output.gol\n");
+	
 
+	fclose(fp);
+	return true;
 }

@@ -22,18 +22,18 @@ OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 .PHONY: clear dir
 .SUFFIXES:
 
+all: dir $(BIN_DIR)/$(BIN)
+
 test: rebuild
 test:
-	./test.sh
+	./Script/test.sh
 
 mesure: rebuild
 mesure:
-	./mesure.sh
+	./Script/mesure.sh
 
 display: CFLAGS += -DPRINT
 display: clean all
-
-all: dir $(BIN_DIR)/$(BIN)
 
 #
 # BIN creation.
