@@ -15,7 +15,7 @@ void __printLine(Game* g, int (*pf)(const char *, ...)) {
 	unsigned int i = 0;
 
 	(*pf)("+");
-	for ( i = 0; i < g->cols + 2; i++ ) // the 2 '+' 
+	for ( i = 0; i < g->cols + 2; i++ ) /* the 2 '+'  */
 		(*pf)("-");
 	(*pf)("+\n");
 
@@ -24,7 +24,7 @@ void __printLine(Game* g, int (*pf)(const char *, ...)) {
 void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	unsigned int x, y;
 
-	if ( *pf == printw ) // If we use ncurses we need to replace cursor
+	if ( *pf == printw ) /* If we use ncurses we need to replace cursor */
 		move(0, 0);
 	
 	(*pf)("Board size : \n");
@@ -44,7 +44,7 @@ void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	
 	__printLine(g, pf);
 	
-	if ( *pf == printw ) // If we use ncurses we need to refresh the display
+	if ( *pf == printw ) /* If we use ncurses we need to refresh the display */
 		refresh();
 
 	DEBUG_MSG("Print board finish\n");
@@ -136,19 +136,19 @@ int __neightbourCell(unsigned int x, unsigned int y, Game *g) {
 	char *b = g->current_board;
 
 	if ( x % g->cols != g->cols - 1) {
-		total += b[POS(x + 1, y,     g)]; // Right
-		if ( y < g->rows - 1 ) total += b[POS(x + 1, y + 1, g)]; // Right - Down
-		if ( y > 0 )           total += b[POS(x + 1, y - 1, g)]; // Up - Right
+		total += b[POS(x + 1, y,     g)]; /* Right */
+		if ( y < g->rows - 1 ) total += b[POS(x + 1, y + 1, g)]; /* Right - Down */
+		if ( y > 0 )           total += b[POS(x + 1, y - 1, g)]; /* Up - Right */
 	}
 
 	if ( x % g->cols != 0 ) { 
-		total += b[POS(x - 1, y    , g)]; // Left
-		if ( y < g->rows - 1 ) total += b[POS(x - 1, y + 1, g)]; // Left - Down
-		if ( y > 0 )           total += b[POS(x - 1, y - 1, g)]; // Up - Left
+		total += b[POS(x - 1, y    , g)]; /* Left */
+		if ( y < g->rows - 1 ) total += b[POS(x - 1, y + 1, g)]; /* Left - Down */
+		if ( y > 0 )           total += b[POS(x - 1, y - 1, g)]; /* Up - Left */
 	}
 
-	if ( y < g->rows - 1 ) total += b[POS(x    , y + 1, g)]; // Down
-	if ( y > 0 )           total += b[POS(x    , y - 1, g)]; // Up 
+	if ( y < g->rows - 1 ) total += b[POS(x    , y + 1, g)]; /* Down */
+	if ( y > 0 )           total += b[POS(x    , y - 1, g)]; /* Up  */
 
 	return total;
 }
@@ -186,7 +186,7 @@ Game* loadBoard(char* name) {
 	g = __newGame(rows, cols);
 
 	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
-	rows = 0; cols = 0; // Reinit variable
+	rows = 0; cols = 0; /* Reinit variable */
 	
 	while ( (reader = fgetc(fp)) != EOF ) {
 		if ( reader == '.' ) reader = DEAD_CELL;
