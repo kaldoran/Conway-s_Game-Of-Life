@@ -15,7 +15,7 @@ void __printLine(Game* g, int (*pf)(const char *, ...)) {
 	unsigned int i = 0;
 
 	(*pf)("+");
-	for ( i = 0; i < g->cols + 2; i++ ) // the 2 '+' 
+	for ( i = 0; i < g->cols + 2; i++ ) /* the 2 '+'  */
 		(*pf)("-");
 	(*pf)("+\n");
 
@@ -24,7 +24,7 @@ void __printLine(Game* g, int (*pf)(const char *, ...)) {
 void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	unsigned int x, y;
 
-	if ( *pf == printw )
+	if ( *pf == printw ) /* If we use ncurses we need to replace cursor */
 		move(0, 0);
 	
 	(*pf)("Board size : \n");
@@ -44,7 +44,7 @@ void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
 	
 	__printLine(g, pf);
 	
-	if ( *pf == printw)
+	if ( *pf == printw ) /* If we use ncurses we need to refresh the display */
 		refresh();
 
 	DEBUG_MSG("Print board finish\n");
@@ -96,17 +96,14 @@ void freeGame(Game* g)  {
 	free(g);
 }
 
-Game* generateRandomBoard() {
+Game* generateRandomBoard(Option o) {
 
 	unsigned int rows = 0, cols = 0;
 	Game* g;
 		
-	rows = rand() % ( MAX_ROWS_SIZE - MIN_ROWS_SIZE) + MIN_ROWS_SIZE;
-	cols = rand() % ( MAX_COLS_SIZE - MIN_COLS_SIZE) + MIN_COLS_SIZE;	
-
-	g = __newGame(rows, cols);
+	g = __newGame(o.rows, o.cols);
 	
-	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
+	DEBUG_MSG("Ligne : %d, Cols : %d\n", o.rows, o.cols);
 	for (rows = 0; rows < g->rows; rows++)
 		for(cols = 0; cols < g->cols; cols++)
 			g->current_board[POS(cols, rows, g)] = (
@@ -123,19 +120,19 @@ int __neightbourCell(unsigned int x, unsigned int y, Game *g) {
 	char *b = g->current_board;
 
 	if ( x % g->cols != g->cols - 1) {
-		total += b[POS(x + 1, y,     g)]; // Right
-		if ( y < g->rows - 1 ) total += b[POS(x + 1, y + 1, g)]; // Right - Down
-		if ( y > 0 )           total += b[POS(x + 1, y - 1, g)]; // Up - Right
+		total += b[POS(x + 1, y,     g)]; /* Right */
+		if ( y < g->rows - 1 ) total += b[POS(x + 1, y + 1, g)]; /* Right - Down */
+		if ( y > 0 )           total += b[POS(x + 1, y - 1, g)]; /* Up - Right */
 	}
 
 	if ( x % g->cols != 0 ) { 
-		total += b[POS(x - 1, y    , g)]; // Left
-		if ( y < g->rows - 1 ) total += b[POS(x - 1, y + 1, g)]; // Left - Down
-		if ( y > 0 )           total += b[POS(x - 1, y - 1, g)]; // Up - Left
+		total += b[POS(x - 1, y    , g)]; /* Left */
+		if ( y < g->rows - 1 ) total += b[POS(x - 1, y + 1, g)]; /* Left - Down */
+		if ( y > 0 )           total += b[POS(x - 1, y - 1, g)]; /* Up - Left */
 	}
 
-	if ( y < g->rows - 1 ) total += b[POS(x    , y + 1, g)]; // Down
-	if ( y > 0 )           total += b[POS(x    , y - 1, g)]; // Up 
+	if ( y < g->rows - 1 ) total += b[POS(x    , y + 1, g)]; /* Down */
+	if ( y > 0 )           total += b[POS(x    , y - 1, g)]; /* Up  */
 
 	return total;
 }
@@ -148,11 +145,13 @@ char __process(unsigned int x, unsigned int y, Game* g) {
 	else                                    return g->current_board[POS(x, y, g)];
 }
 
-void gameTick(Game* g) {
+
+void gameTick(Game *g, Task* t) {
+
 	unsigned int x, y;
-		
+	
 	for (y = 0; y < g->rows; y++)
-		for(x = 0; x < g->cols; x++)
+		for(x = t->min; x <= t->max; x++)
 			g->next_board[POS(x, y, g)] = __process(x, y, g);
 
 	DEBUG_MSG("Game tick finish");
@@ -170,21 +169,41 @@ Game* loadBoard(char* name) {
 
 	g = __newGame(rows, cols);
 
-	DEBUG_MSG("Ligne : %d, Cols : %d\n", rows, cols);
-	rows = 0; cols = 0; // Reinit variable
+	DEBUG_MSG("Rows : %d, Cols : %d\n", rows, cols);
+	rows = 0; cols = 0; /* Reinit variable */
 	
 	while ( (reader = fgetc(fp)) != EOF ) {
 		if ( reader == '.' ) reader = DEAD_CELL;
 		if ( reader == '#' ) reader = ALIVE_CELL;
 		
-		g->current_board[POS(cols, rows, g)] = reader;
-
-		if ( reader == '\n' ) ++rows;
-		if ( ++cols > g->cols ) cols = 0;
+		if ( reader == '\n') ++rows;
+		else g->current_board[POS(cols, rows, g)] = reader;
+		
+		if ( ++cols > g->cols ) cols = 0; /* We are going to go over cols due to \n */
 	}
-	
+
 	fclose(fp);
 
 	if ( cols != g->cols && rows != g->rows ) { freeGame(g); return NULL; }
 	return g;
+}
+
+bool saveBoard(Game *g) {
+	unsigned int i;
+	FILE *fp = NULL;
+
+	if ( (fp = fopen("output.gol", "w")) == NULL ) return false;
+
+	fprintf(fp, "Rows : %d\nCols : %d\n", g->rows, g->cols);
+	for ( i = 0; i < g->cols * g->rows; i++ ) {
+
+		fprintf(fp, "%c", ((g->current_board[i]) ? '#' : '.') );
+		if ( i % g->cols == g->cols - 1 ) fprintf(fp, "\n"); 
+	}
+
+	printf("File saved into : output.gol\n");
+	
+
+	fclose(fp);
+	return true;
 }

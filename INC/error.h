@@ -1,11 +1,11 @@
-//----------------------------------------------------------
-// AUTEUR : REYNAUD Nicolas                                 |
-// FICHIER : error.h                                        |
-// DATE : 27/01/15                                          |
-//                                                          |
-// - Debug Maccro [C99 Convention]                          |
-// - Quit maccro                                            |
-//----------------------------------------------------------
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                 | */
+/* FICHIER : error.h                                        | */
+/* DATE : 27/01/15                                          | */
+/*                                                          | */
+/* - Debug Maccro [C99 Convention]                          | */
+/* - Quit maccro                                            | */
+/*---------------------------------------------------------- */
 
 #ifndef ERROR_H
 #define ERROR_H
