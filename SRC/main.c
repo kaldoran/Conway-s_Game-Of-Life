@@ -7,6 +7,7 @@
 
 #include "error.h"
 #include "game.h"
+#include "task.h"
 #include "ncurses.h"
 #include "option.h"
 #include "thread.h"
@@ -17,7 +18,8 @@ int main(int argc, char* argv[]) {
 
 	Option o;
 	Game* g = NULL; 
-	TickParam *tp = NULL;
+	Task *t = NULL;
+    ThreadInfo *ti = NULL;
 
 	o = getOption(argc, argv);  /* Get all option	 */
 
@@ -31,16 +33,23 @@ int main(int argc, char* argv[]) {
 	if ( o.use_ncurses ) /* If we use ncurses */
 		initNCurses();   /* Then we init the display */
 
-	if ( o.nb_thread == 0 ) /* If there is no threa given, then we use sequential version */
-		tp = newTickParam(0, g->cols - 1, g); /* And said to the main thread to threat all columns */
+    if ( o.nb_thread == 0 ) { /* If there is no threa given, then we use sequential version */
+		t = newTask(0, g->cols - 1); /* And said to the main thread to threat all columns */
+    } else {
+        newThreadInfo(o.nb_thread, g, o.use_fine_grained);
+        createNThread(ti);
+    }
 
 	while(o.max_tick != 0) {         /* Inifinit loop if total tick not given */
-		gamePrintInfo(g, o);         
+
+        gamePrintInfo(g, o);         
 		
-		if ( o.nb_thread == 0 )      /* if there is 0 thread then do not use thread method  */
-			gameTick(tp);       	 /* Lets the game tick */
-		else
-			createNThreadF(o.nb_thread, g, o.use_fine_grained);
+		if ( o.nb_thread == 0 ) {    /* if there is 0 thread then do not use thread method  */
+			gameTick(g, t);       	 /* Lets the game tick */
+	    } else {
+            createTask(ti, o.use_fine_grained);
+            runThread(ti);
+        }
 
 		__swapGrid(g);
 		--o.max_tick;
@@ -55,8 +64,12 @@ int main(int argc, char* argv[]) {
 	if ( o.save_file ) 	
 		saveBoard(g);
 
-	if ( o.nb_thread == 0 ) 
-		free(tp);
+	if ( o.nb_thread == 0 ) {
+		free(t);
+    } else {
+        endNThread(ti);
+        freeThreadInfo(ti);
+    }
 
 	freeGame(g);           /* Free space we are not in Java */
 	
