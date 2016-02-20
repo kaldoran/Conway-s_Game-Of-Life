@@ -1,16 +1,36 @@
+/*
+ *  Copyright (C) 2016-2016 REYNAUD Nicolas
+ *  Author : REYNAUD Nicolas <kaldoran [at] live.fr>
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
+ */
+
 #ifndef OPT
 #define OPT
 
-#include <stdbool.h>
 #include "option_struct.h"
 
-#define OPT_LIST_DEFAULT "hf:t:n" // FILE
+#define OPT_LIST "hf:t:np:r:c:gs" /* FILE */
 
-#if defined(PARA_G) || defined(PARA_F)
-	#define OPT_LIST OPT_LIST_DEFAULT  "p:"
-#else
-	#define OPT_LIST OPT_LIST_DEFAULT
-#endif
+/** Use the definition defined by David Titarenco
+ *  On StackOverFlow http://stackoverflow.com/questions/3437404/min-and-max-in-c 
+ */
+#define MAX(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
 
 void usage(char* name);
 

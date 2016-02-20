@@ -17,37 +17,19 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef TASK_PILE_STRUCT
+#define TASK_PILE_STRUCT
 
-#include "game_struct.h"
-#include "option_struct.h"
+typedef struct Task {
+    unsigned int min;
+    unsigned int max;
 
-#include "task_pile_struct.h"
+    struct Task* next_task;
+} Task;
 
-#define MIN_COLS_SIZE 5
-#define MIN_ROWS_SIZE 3
+typedef struct TaskPile {
+  Task *first;
+} TaskPile;
 
-#define MAX_COLS_SIZE 50
-#define MAX_ROWS_SIZE 30
-#define POURCENT_BEEN_ALIVE 15
 
-#define DEAD_CELL 0
-#define ALIVE_CELL 1
-
-#define POS(X, Y, G) (__position(X,Y,G))
-
-void gamePrintInfo ( Game* g, Option o);
-
-void freeGame(Game* g);
-
-Game* generateRandomBoard(Option o);
-
-void gameTick(Game *g, Task *t);
-
-void __swapGrid(Game* g);
-
-Game* loadBoard(char* name);
-
-bool saveBoard(Game *g);
 #endif

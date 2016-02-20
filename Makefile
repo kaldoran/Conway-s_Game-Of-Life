@@ -1,6 +1,5 @@
 # Release/Debug
 DEBUG=yes
-PRINT=yes
 
 # Directories
 SRC_DIR = SRC
@@ -9,12 +8,8 @@ OBJ_DIR = OBJ
 BIN_DIR = BIN
 
 CC = gcc
-CFLAGS = -W -Wall -Wextra -O2 -lncursesw
+CFLAGS = -W -Wall -Wextra -O2 -lncursesw -lpthread -ansi -D_DEFAULT_SOURCE
 BIN = GameOfLife
-
-ifeq ($(PRINT), yes) 
- 	CFLAGS += -DPRINT
-endif
 
 ifeq ($(DEBUG), yes) 
 	CFLAGS += -g -DDEBUG
@@ -28,6 +23,17 @@ OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 .SUFFIXES:
 
 all: dir $(BIN_DIR)/$(BIN)
+
+test: rebuild
+test:
+	./Script/test.sh
+
+mesure: rebuild
+mesure:
+	./Script/mesure.sh
+
+display: CFLAGS += -DPRINT
+display: clean all
 
 #
 # BIN creation.

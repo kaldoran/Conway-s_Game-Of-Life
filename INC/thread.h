@@ -17,37 +17,25 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef THREAD
+#define THREAD
+
+#include <stdbool.h>
 
 #include "game_struct.h"
-#include "option_struct.h"
+#include "thread_struct.h"
 
-#include "task_pile_struct.h"
 
-#define MIN_COLS_SIZE 5
-#define MIN_ROWS_SIZE 3
+ThreadInfo *newThreadInfo(unsigned int n, Game *g, bool fine_grained);
 
-#define MAX_COLS_SIZE 50
-#define MAX_ROWS_SIZE 30
-#define POURCENT_BEEN_ALIVE 15
+void freeThreadInfo(ThreadInfo *ti);
 
-#define DEAD_CELL 0
-#define ALIVE_CELL 1
+void createTask(ThreadInfo *ti, bool fine_grained);
 
-#define POS(X, Y, G) (__position(X,Y,G))
+void runThread(ThreadInfo *ti); 
 
-void gamePrintInfo ( Game* g, Option o);
+void createNThread(ThreadInfo *ti);
 
-void freeGame(Game* g);
+void endNThread(ThreadInfo *ti); 
 
-Game* generateRandomBoard(Option o);
-
-void gameTick(Game *g, Task *t);
-
-void __swapGrid(Game* g);
-
-Game* loadBoard(char* name);
-
-bool saveBoard(Game *g);
 #endif
