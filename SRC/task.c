@@ -24,17 +24,17 @@
 #include "memory.h"
 
 Task *newTask(int min, int max) {
-	Task *t;
+    Task *t;
 
-	if ( min > max )
-		QUIT_MSG("max need to greater than min\n");
+    if ( min > max )
+        QUIT_MSG("max need to greater than min\n");
 
-	t = NEW_ALLOC(t);
-	t->min = min;
-	t->max = max;
+    t = NEW_ALLOC(t);
+    t->min = min;
+    t->max = max;
     t->next_task = NULL;
 
-    return t;	
+    return t;    
 }
 
 void insertTask(TaskPile *tp, Task *t) {

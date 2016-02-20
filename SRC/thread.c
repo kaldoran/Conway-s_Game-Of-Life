@@ -32,10 +32,10 @@ ThreadInfo *newThreadInfo(unsigned int n, Game *g, bool fine_grained) {
 
     ti = NEW_ALLOC(ThreadInfo);
 
-	if ( n > g->cols ) { /* If there is more thread than needed, then adjust the value */
-		fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols);
-		ti->n = g->cols;
-	}
+    if ( n > g->cols ) { /* If there is more thread than needed, then adjust the value */
+        fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols);
+        ti->n = g->cols;
+    }
 
     ti->g = g;
     ti->n = n;
@@ -71,15 +71,15 @@ void createTask(ThreadInfo *ti, bool fine_grained) {
 
     pthread_mutex_lock(&ti->lock_work);
 
-	slice_size = (!fine_grained) ? (int) ti->g->cols / ti->n : 1; /* Calculate slice size */
+    slice_size = (!fine_grained) ? (int) ti->g->cols / ti->n : 1; /* Calculate slice size */
     
     for ( i = 0; i < ti->g->cols; i++ ) {
-	    t = NEW_ALLOC(Task); /* Create new task */
-		
-	    t->min = i * slice_size;            /* The start of slice start at the last one done  */
-	    t->max = t->min + (slice_size - 1); /* And end at : The start + the slice size */
-	
-	    if ( !fine_grained && i == ti->g->cols - 1 ) t->max += ti->g->cols % ti->n; /* If we don't use the fine grained, then add missing column to */
+        t = NEW_ALLOC(Task); /* Create new task */
+        
+        t->min = i * slice_size;            /* The start of slice start at the last one done  */
+        t->max = t->min + (slice_size - 1); /* And end at : The start + the slice size */
+    
+        if ( !fine_grained && i == ti->g->cols - 1 ) t->max += ti->g->cols % ti->n; /* If we don't use the fine grained, then add missing column to */
     
         insertTask(ti->task_pile, t);
     }
@@ -150,7 +150,7 @@ void createNThread(ThreadInfo *ti) {
     unsigned int i = 0;
 
     for ( i = 0; i < ti->n; i++) 
-		if ( pthread_create(&ti->plist[i], NULL, (void*) __processThread, ti) ) /* Create the thread here */
+        if ( pthread_create(&ti->plist[i], NULL, (void*) __processThread, ti) ) /* Create the thread here */
             QUIT_MSG("Can't create thread %d\n", i);
 }
 

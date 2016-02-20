@@ -33,66 +33,66 @@
 
 int main(int argc, char* argv[]) {
 
-	srand(time(NULL));
+    srand(time(NULL));
 
-	Option o;
-	Game* g = NULL; 
-	Task *t = NULL;
+    Option o;
+    Game* g = NULL; 
+    Task *t = NULL;
     ThreadInfo *ti = NULL;
 
-	o = getOption(argc, argv);  /* Get all option	 */
+    o = getOption(argc, argv);  /* Get all option     */
 
-	if ( *o.file_path != '\0' ) /* If path file is not empty */
-		if ( (g = loadBoard(o.file_path)) == NULL ) /* then use the given file [load id] */
-			fprintf(stderr, "Can't load file %s\n", o.file_path);
+    if ( *o.file_path != '\0' ) /* If path file is not empty */
+        if ( (g = loadBoard(o.file_path)) == NULL ) /* then use the given file [load id] */
+            fprintf(stderr, "Can't load file %s\n", o.file_path);
 
-	if ( g == NULL ) /* If load of file fail Or no grid given */
-		g = generateRandomBoard(o); /* then create one */
+    if ( g == NULL ) /* If load of file fail Or no grid given */
+        g = generateRandomBoard(o); /* then create one */
 
-	if ( o.use_ncurses ) /* If we use ncurses */
-		initNCurses();   /* Then we init the display */
+    if ( o.use_ncurses ) /* If we use ncurses */
+        initNCurses();   /* Then we init the display */
 
     if ( o.nb_thread == 0 ) { /* If there is no threa given, then we use sequential version */
-		t = newTask(0, g->cols - 1); /* And said to the main thread to threat all columns */
+        t = newTask(0, g->cols - 1); /* And said to the main thread to threat all columns */
     } else {
         ti = newThreadInfo(o.nb_thread, g, o.use_fine_grained);
         createNThread(ti);
     }
 
-	while(o.max_tick != 0) {         /* Inifinit loop if total tick not given */
+    while(o.max_tick != 0) {         /* Inifinit loop if total tick not given */
 
         gamePrintInfo(g, o);         
-		
-		if ( o.nb_thread == 0 ) {    /* if there is 0 thread then do not use thread method  */
-			gameTick(g, t);       	 /* Lets the game tick */
-	    } else {
+        
+        if ( o.nb_thread == 0 ) {    /* if there is 0 thread then do not use thread method  */
+            gameTick(g, t);            /* Lets the game tick */
+        } else {
             createTask(ti, o.use_fine_grained);
             runThread(ti);
         }
-		
+        
         __swapGrid(g);
-		--o.max_tick;
-		
+        --o.max_tick;
+        
         #ifdef PRINT                 /* If we print we add some delay without it we can't see the grid */
-			usleep(400000);
-		#endif
-	}
+            usleep(400000);
+        #endif
+    }
 
     if ( o.use_ncurses) /* If we use ncurses ( and then init it ) */
-		endNCurses();   /* we need to clear display info */
+        endNCurses();   /* we need to clear display info */
 
-	if ( o.save_file ) 	
-		saveBoard(g);
+    if ( o.save_file )     
+        saveBoard(g);
 
-	if ( o.nb_thread == 0 ) {
-		free(t);
+    if ( o.nb_thread == 0 ) {
+        free(t);
     } else {
         endNThread(ti);
         freeThreadInfo(ti);
     }
 
-	freeGame(g);           /* Free space we are not in Java */
-	
-	exit(EXIT_SUCCESS);
+    freeGame(g);           /* Free space we are not in Java */
+    
+    exit(EXIT_SUCCESS);
 }
 

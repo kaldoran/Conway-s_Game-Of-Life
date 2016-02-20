@@ -21,13 +21,13 @@
 #include <curses.h>
 
 void initNCurses() {
-	initscr();
-	noecho();
+    initscr();
+    noecho();
 }
 
 void endNCurses() {
-	printw("End of generation\nUse anykey for leave\n");
-	refresh();
-	getch();
-	endwin();
+    printw("End of generation\nUse anykey for leave\n");
+    refresh();
+    getch();
+    endwin();
 }
