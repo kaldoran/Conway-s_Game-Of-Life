@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
     if ( o.nb_thread == 0 ) { /* If there is no threa given, then we use sequential version */
 		t = newTask(0, g->cols - 1); /* And said to the main thread to threat all columns */
     } else {
-        newThreadInfo(o.nb_thread, g, o.use_fine_grained);
+        ti = newThreadInfo(o.nb_thread, g, o.use_fine_grained);
         createNThread(ti);
     }
 
@@ -50,15 +50,16 @@ int main(int argc, char* argv[]) {
             createTask(ti, o.use_fine_grained);
             runThread(ti);
         }
-
-		__swapGrid(g);
+		
+        __swapGrid(g);
 		--o.max_tick;
-		#ifdef PRINT                 /* If we print we add some delay without it we can't see the grid */
+		
+        #ifdef PRINT                 /* If we print we add some delay without it we can't see the grid */
 			usleep(400000);
 		#endif
 	}
-	
-	if ( o.use_ncurses) /* If we use ncurses ( and then init it ) */
+
+    if ( o.use_ncurses) /* If we use ncurses ( and then init it ) */
 		endNCurses();   /* we need to clear display info */
 
 	if ( o.save_file ) 	

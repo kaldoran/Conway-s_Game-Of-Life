@@ -14,7 +14,7 @@ typedef struct ThreadInfo {
     Game *g;        /* Contains a copy of the pointer of Game [Game is in main thread] */
     pthread_mutex_t lock_work; /* Lock wait take / place job into the job list */
     
-    int total_end;
+    unsigned int total_end;
     pthread_mutex_t lock_end;
     pthread_cond_t  lock_end_cond;
 

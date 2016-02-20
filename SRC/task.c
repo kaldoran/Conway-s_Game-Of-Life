@@ -19,6 +19,7 @@ Task *newTask(int min, int max) {
 }
 
 void insertTask(TaskPile *tp, Task *t) {
+    DEBUG_MSG("We add task from : %d to %d |Taks : %p - Next : %p|\n", t->min, t->max, t, t->next_task);
 
     if ( tp->first != NULL ) 
         t->next_task = tp->first;
@@ -38,6 +39,7 @@ Task *getTask(TaskPile *tp) {
     t = tp->first;
     tp->first = t->next_task;
 
+    DEBUG_MSG("Get : %p | tp->first : %p\n", t, tp->first);
     return t;
 }
 
