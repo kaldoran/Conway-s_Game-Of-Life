@@ -220,8 +220,9 @@ bool saveBoard(Game *g) {
         if ( i % g->cols == g->cols - 1 ) fprintf(fp, "\n"); 
     }
 
-    printf("File saved into : output.gol\n");
-    
+    #ifdef PRINT
+        printf("File saved into : output.gol\n");
+    #endif
 
     fclose(fp);
     return true;

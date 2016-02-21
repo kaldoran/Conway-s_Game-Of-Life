@@ -103,13 +103,14 @@ void __waitTickEnd(ThreadInfo* ti) {
 }
 
 void runThread(ThreadInfo* ti) {
+    __waitTickEnd(ti); /* Wait that all have end there task before restart */
     pthread_mutex_lock(&ti->lock_end);
 
     ti->total_end = 0;
     pthread_cond_broadcast(&ti->lock_end_cond);
     pthread_mutex_unlock(&ti->lock_end);
 
-    __waitTickEnd(ti);
+    __waitTickEnd(ti); /* Wait all have finish before give hand to main */
 }
 
 void __waitAllTick(ThreadInfo* ti) {
