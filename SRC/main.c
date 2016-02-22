@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     if ( o.nb_thread == 0 ) { /* If there is no threa given, then we use sequential version */
         t = newTask(0, g->cols - 1); /* And said to the main thread to threat all columns */
     } else {
-        ti = newThreadInfo(o.nb_thread, g, o.use_fine_grained);
+        ti = newThreadInfo(o.nb_thread, g);
         createNThread(ti);
     }
 

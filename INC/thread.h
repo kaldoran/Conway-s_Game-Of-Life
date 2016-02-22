@@ -26,7 +26,7 @@
 #include "thread_struct.h"
 
 
-ThreadInfo *newThreadInfo(unsigned int n, Game *g, bool fine_grained);
+ThreadInfo *newThreadInfo(unsigned int n, Game *g);
 
 void freeThreadInfo(ThreadInfo *ti);
 

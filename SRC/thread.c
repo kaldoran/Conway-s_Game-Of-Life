@@ -27,28 +27,28 @@
 #include "game.h"
 #include "task.h"
 
-ThreadInfo *newThreadInfo(unsigned int n, Game *g, bool fine_grained) {
+ThreadInfo *newThreadInfo(unsigned int n, Game *g) {
     ThreadInfo *ti;
 
     ti = NEW_ALLOC(ThreadInfo);
-
-    if ( n > g->cols ) { /* If there is more thread than needed, then adjust the value */
-        fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols);
-        ti->n = g->cols;
-    }
 
     ti->g = g;
     ti->n = n;
     ti->total_end = 0;
     ti->should_end = false;
-    ti->keep_task = (g->cols == n || !fine_grained);
+    ti->keep_task = false;
     ti->lock_work = (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
     ti->lock_end =  (pthread_mutex_t) PTHREAD_MUTEX_INITIALIZER;
     ti->lock_end_cond = (pthread_cond_t) PTHREAD_COND_INITIALIZER;
 
     ti->task_pile = NEW_ALLOC(TaskPile);
     ti->plist =  NEW_ALLOC_K(n, pthread_t);
-    
+
+    if ( n > g->cols ) { /* If there is more thread than needed, then adjust the value */
+        fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols);
+        ti->n = g->cols; /* change default value */
+    }
+
     return ti;
 }
 
@@ -71,13 +71,14 @@ void createTask(ThreadInfo *ti, bool fine_grained) {
 
     pthread_mutex_lock(&ti->lock_work);
 
-    slice_size = (!fine_grained) ? (int) ti->g->cols / ti->n : 1; /* Calculate slice size */
-    
-    for ( i = 0; i < ti->g->cols; i++ ) {
+    slice_size = (!fine_grained) ? (int) ti->g->cols / ti->n : 0; /* Calculate slice size */
+   
+    DEBUG_MSG("Slice Size : %d\n", slice_size);
+    for ( i = 0; i < ti->g->cols; i = (t->max - t->min + 1) + i ) {
         t = NEW_ALLOC(Task); /* Create new task */
         
-        t->min = i * slice_size;            /* The start of slice start at the last one done  */
-        t->max = t->min + (slice_size - 1); /* And end at : The start + the slice size */
+        t->min = i;            /* The start of slice start at the last one done  */
+        t->max = t->min + slice_size; /* And end at : The start + the slice size */
     
         if ( !fine_grained && i == ti->g->cols - 1 ) t->max += ti->g->cols % ti->n; /* If we don't use the fine grained, then add missing column to */
     
@@ -85,6 +86,10 @@ void createTask(ThreadInfo *ti, bool fine_grained) {
     }
 
     pthread_mutex_unlock(&ti->lock_work);
+
+    /* set it to true when we've got some task and enought thread for never switch them */
+    if ( ti->g->cols == ti->n && !ti->keep_task ) 
+        ti->keep_task = true;
 }
 
 

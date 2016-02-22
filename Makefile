@@ -7,7 +7,7 @@ INC_DIR = INC
 OBJ_DIR = OBJ
 BIN_DIR = BIN
 
-CC = gcc
+CC = /usr/bin/gcc
 CFLAGS = -W -Wall -Wextra -O2 -lncursesw -lpthread -ansi -D_DEFAULT_SOURCE
 BIN = GameOfLife
 
@@ -23,6 +23,10 @@ OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 .SUFFIXES:
 
 all: dir $(BIN_DIR)/$(BIN)
+
+test-rand: build
+test-rand:
+	./Script/test_rand.sh
 
 test: rebuild
 test:
@@ -67,13 +71,13 @@ endif
 
 clean:
 ifeq ($(DEBUG), yes) 
-	rm -rf ./$(OBJ_DIR);
-	rm -rf ./$(BIN);
+	/usr/bin/rm -rf ./$(OBJ_DIR);
+	/usr/bin/rm -rf ./$(BIN);
 else
-	@rm -rf ./$(OBJ_DIR);
-	@echo -e "Remove object file and directory"
-	@rm -rf ./$(BIN_DIR);
-	@echo -e "Remove executable and remove bin directory"
+	@/usr/bin/rm -rf ./$(OBJ_DIR);
+	@/usr/bin/echo -e "Remove object file and directory"
+	@/usr/bin/rm -rf ./$(BIN_DIR);
+	@/usr/bin/echo -e "Remove executable and remove bin directory"
 endif
 
 
@@ -84,12 +88,12 @@ rebuild: clean all
 #
 
 clear:
-	clear
+	/usr/bin/clear
 #
 # Repository creation.
 #
 
 dir:
-	@mkdir -p $(OBJ_DIR)
-	@mkdir -p $(BIN_DIR)
+	@/usr/bin/mkdir -p $(OBJ_DIR)
+	@/usr/bin/mkdir -p $(BIN_DIR)
 
