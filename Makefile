@@ -7,8 +7,11 @@ INC_DIR = INC
 OBJ_DIR = OBJ
 BIN_DIR = BIN
 
-CC = /usr/bin/gcc
-CFLAGS = -W -Wall -Wextra -O2 -lncursesw -lpthread -ansi -D_DEFAULT_SOURCE
+CC = gcc
+CFLAGS = -W -Wall -Wextra -O2 -lncursesw -lpthread -ansi 
+
+# For glibc under glibc2.20 [_BSD_SOURCE] and higher [_DEFAULT_SOURCE]
+CFLAGS+=-D_DEFAULT_SOURCE -D_BSD_SOURCE
 BIN = GameOfLife
 
 ifeq ($(DEBUG), yes) 
@@ -24,7 +27,7 @@ OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 
 all: dir $(BIN_DIR)/$(BIN)
 
-test-rand: build
+test-rand: rebuild
 test-rand:
 	./Script/test_rand.sh
 
@@ -71,13 +74,13 @@ endif
 
 clean:
 ifeq ($(DEBUG), yes) 
-	/usr/bin/rm -rf ./$(OBJ_DIR);
-	/usr/bin/rm -rf ./$(BIN);
+	rm -rf ./$(OBJ_DIR);
+	rm -rf ./$(BIN);
 else
-	@/usr/bin/rm -rf ./$(OBJ_DIR);
-	@/usr/bin/echo -e "Remove object file and directory"
-	@/usr/bin/rm -rf ./$(BIN_DIR);
-	@/usr/bin/echo -e "Remove executable and remove bin directory"
+	@rm -rf ./$(OBJ_DIR);
+	@echo -e "Remove object file and directory"
+	@rm -rf ./$(BIN_DIR);
+	@echo -e "Remove executable and remove bin directory"
 endif
 
 
@@ -88,12 +91,12 @@ rebuild: clean all
 #
 
 clear:
-	/usr/bin/clear
+	clear
 #
 # Repository creation.
 #
 
 dir:
-	@/usr/bin/mkdir -p $(OBJ_DIR)
-	@/usr/bin/mkdir -p $(BIN_DIR)
+	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(BIN_DIR)
 
