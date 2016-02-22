@@ -55,7 +55,7 @@ for (( i = 0; i < $TOTAL_TEST; i++ )); do
     DEFAULT_OPT="-s -f ../Script/random.gol -t $TOTAL_ITERATION"
 
     echo -e "\n--------------"
-    echo "[TEST] Let's start with $TOTAL_ITERATION iteration [$i/$TOTAL_TEST]";
+    echo "[TEST] Let's start with $TOTAL_ITERATION iteration [$(( i + 1 ))/$TOTAL_TEST]";
     echo -e "--------------"
 
     # --------------------------------------------
