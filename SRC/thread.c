@@ -45,7 +45,7 @@ ThreadInfo *newThreadInfo(unsigned int n, Game *g) {
     ti->plist =  NEW_ALLOC_K(n, pthread_t);
 
     if ( n > g->cols ) { /* If there is more thread than needed, then adjust the value */
-        fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols);
+        fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols );
         ti->n = g->cols; /* change default value */
     }
 
@@ -63,6 +63,7 @@ void freeThreadInfo(ThreadInfo *ti) {
 
 void createTask(ThreadInfo *ti, bool fine_grained) {
     unsigned int i;
+    unsigned int j = 0;
     int slice_size = 0;
     Task *t = NULL;
 
@@ -70,25 +71,28 @@ void createTask(ThreadInfo *ti, bool fine_grained) {
         return;
 
     pthread_mutex_lock(&ti->lock_work);
-
-    slice_size = (!fine_grained) ? (int) ti->g->cols / ti->n : 0; /* Calculate slice size */
-   
-    DEBUG_MSG("Slice Size : %d\n", slice_size);
-    for ( i = 0; i < ti->g->cols; i = (t->max - t->min + 1) + i ) {
-        t = NEW_ALLOC(Task); /* Create new task */
+    
+    slice_size = (!fine_grained ) ? ((int) ti->g->cols / ti->n) - 1 : 0; /* Calculate slice size */
+    
+    DEBUG_MSG("Slice Size : %d \n", slice_size + 1 );
+    for ( i = 0; i < ti->g->cols; i = (t->max - t->min + 1) + i, ++j ) { /* J contains number of thread used */
+        t = NEW_ALLOC(Task);
         
-        t->min = i;            /* The start of slice start at the last one done  */
+        t->min = i;                   /* The start of slice start at the last one done  */
         t->max = t->min + slice_size; /* And end at : The start + the slice size */
     
-        if ( !fine_grained && i == ti->g->cols - 1 ) t->max += ti->g->cols % ti->n; /* If we don't use the fine grained, then add missing column to */
-    
+        if ( !fine_grained && j == ti->n - 1 ) /* If we are at the last thread available in average grained */
+            t->max += ti->g->cols % ti->n;     /* Then give it the remaining column */
+
+        if ( !fine_grained && t->max >= ti->g->cols ) t->max = ti->g->cols - 1; /* If we don't use the fine grained, then add missing column to */
+
         insertTask(ti->task_pile, t);
     }
 
     pthread_mutex_unlock(&ti->lock_work);
 
     /* set it to true when we've got some task and enought thread for never switch them */
-    if ( ti->g->cols == ti->n && !ti->keep_task ) 
+    if ( (ti->g->cols == ti->n || !fine_grained) && !ti->keep_task ) 
         ti->keep_task = true;
 }
 
@@ -133,10 +137,12 @@ void __processThread(ThreadInfo* ti) {
     __waitAllTick(ti);
 
     while (!ti->should_end) {
-     
+    
         if ( t == NULL )
-            if ( (t = __threadGetTask(ti)) != NULL)
-                gameTick(ti->g, t);
+            t = __threadGetTask(ti);
+
+        if ( t != NULL )
+            gameTick(ti->g, t);
        
         if ( !ti->keep_task ) { 
             free(t); 
