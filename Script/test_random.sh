@@ -44,7 +44,7 @@ fi;
 
 AllSuccess="";
 
-for i in $(seq 0 $TOTAL_TEST); do
+for (( i = 0; i < $TOTAL_TEST; i++ )); do
 
     echo -e "\n--------------"
     echo "[TEST] Start creating a random board";

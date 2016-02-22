@@ -36,7 +36,7 @@ output=("block.gol" "blinker.gol" "beacon.gol" "empty.gol" "toad.gol")
 
 thread=(1 2 5 10)
 
-for file in $(seq 0 $(( ${#input[@]} - 1)) ); do
+for (( i = 0; i < $(( ${#input[@]} - 1)) ; i++ )); do
 
     TOTAL_ITERATION=$(( $RANDOM % 100 )) 
     if [ $(( $TOTAL_ITERATION % 2 )) -ne 0 ]; then ((--TOTAL_ITERATION)); fi

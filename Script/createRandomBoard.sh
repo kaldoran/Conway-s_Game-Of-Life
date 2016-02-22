@@ -40,8 +40,8 @@ FILE_NAME="${PATH}/random.gol"
 echo "Rows : $ROWS" > "$FILE_NAME";
 echo "Cols : $COLS" >> "$FILE_NAME";
 
-for i in $(/usr/bin/seq 1 $ROWS); do
-	for j in $(/usr/bin/seq 1 $COLS); do
+for (( i = 1; i <= $ROWS; i++ )); do
+    for (( j = 1; j <= $COLS; j++ )); do
 		PROBA_CELL_ALIVE=$(( RANDOM % 100 ));
 		if [ $PROBA_CELL_ALIVE -lt 40 ]; then 
 			echo -n "." >> "$FILE_NAME";
