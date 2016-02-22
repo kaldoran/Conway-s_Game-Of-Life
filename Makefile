@@ -27,9 +27,10 @@ OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 
 all: dir $(BIN_DIR)/$(BIN)
 
+TOTAL=10
 test-rand: rebuild
 test-rand:
-	./Script/test_rand.sh
+	./Script/test_random.sh $(TOTAL)
 
 test: rebuild
 test:

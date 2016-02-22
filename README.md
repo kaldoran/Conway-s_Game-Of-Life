@@ -9,6 +9,10 @@ Here is the famous game of life with 3 differents method :
 ##### Compilation: 
  - make test : 
     * Make the game of life and test the correct execution of the program
+ - make test-rand :
+    * Make the game of life and test it 10 time by default, using random board, random number of iteration it only compare that all board compute by the different method are the same.
+ - make test-rand TOTAL=X :
+    * Same as make test-rand but execute X test instead of the default Value.
  - make mesure : 
     * Benchmark that compare all method.
  - make display : 

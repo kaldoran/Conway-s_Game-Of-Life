@@ -20,11 +20,20 @@ function randMax {
 
 PATH_FILE=`dirname $0`
 
-/usr/bin/make rebuild
+if ! [ -e $PROG ]; then
+    echo "[TEST] Compilation : START"
+    make rebuild > /dev/null
+    
+    if [ $? != 0 ]; then
+        echo "Compilation error, abort test";
+        return -1;
+    fi;
+
+    echo -e "[TEST] Compilation : SUCCESS\n";
+fi;
 cd $PATH_FILE
 
 TOTAL_TEST=5
-
 if [ ! -z "$1" ]; then 
     if ! [[ "$1" =~ ^[1-9]||1[0-9]+$ ]]; then
         echo "$1 need to be an integer >0";
@@ -46,7 +55,7 @@ for i in $(seq 0 $TOTAL_TEST); do
     DEFAULT_OPT="-s -f ../Script/random.gol -t $TOTAL_ITERATION"
 
     echo -e "\n--------------"
-    echo "[TEST] Let's start with $TOTAL_ITERATION iteration";
+    echo "[TEST] Let's start with $TOTAL_ITERATION iteration [$i/$TOTAL_TEST]";
     echo -e "--------------"
 
     # --------------------------------------------

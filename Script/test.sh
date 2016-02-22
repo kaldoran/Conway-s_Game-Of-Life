@@ -15,14 +15,17 @@ function diffOutput {
 
 AllSucces="";
 
-echo "[TEST] Compilation : START"
-make rebuild > /dev/null;
-if [ $? != 0 ]; then
-    echo "Compilation error, abort test";
-    return -1;
-fi;
+if ! [ -e $PROG ]; then
+    echo "[TEST] Compilation : START"
+    make rebuild > /dev/null
+    
+    if [ $? != 0 ]; then
+        echo "Compilation error, abort test";
+        return -1;
+    fi;
 
-echo -e "[TEST] Compilation : SUCCESS\n";
+    echo -e "[TEST] Compilation : SUCCESS\n";
+fi;
 
 echo -e "--------------\n";
 
