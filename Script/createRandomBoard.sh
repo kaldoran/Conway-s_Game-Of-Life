@@ -1,7 +1,7 @@
 #!/bin/bash
 
-readonly MIN_ROWS=15
-readonly MIN_COLS=15
+readonly MIN_ROWS=10
+readonly MIN_COLS=10
 
 PATH=`/usr/bin/dirname $0`
 

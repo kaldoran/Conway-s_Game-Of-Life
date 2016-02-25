@@ -35,6 +35,8 @@ int main(int argc, char* argv[]) {
 
     srand(time(NULL));
 
+    clock_t time;
+
     Option o;
     Game* g = NULL; 
     Task *t = NULL;
@@ -59,6 +61,7 @@ int main(int argc, char* argv[]) {
         createNThread(ti);
     }
 
+    time = clock();
     while(o.max_tick != 0) {         /* Inifinit loop if total tick not given */
 
         gamePrintInfo(g, o);         
@@ -77,7 +80,8 @@ int main(int argc, char* argv[]) {
             usleep(400000);
         #endif
     }
-
+    time = clock() - time;
+    printf("Time : %f\n", (double)(time) / CLOCKS_PER_SEC);
     if ( o.use_ncurses) /* If we use ncurses ( and then init it ) */
         endNCurses();   /* we need to clear display info */
 

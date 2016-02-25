@@ -94,7 +94,7 @@ Option getOption(int argc, char **argv) {
         }
     }
     
-    if ( argc == 0) 
+    if ( argc == 1) 
         fprintf(stderr, "Remember to use -h for help\n");
 
     return o;
