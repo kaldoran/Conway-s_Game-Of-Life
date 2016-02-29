@@ -17,12 +17,22 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : error.h                                         */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef OPT
 #define OPT
 
 #include "option_struct.h"
 
-#define OPT_LIST "hf:t:np:r:c:gs" /* FILE */
+/* List of possible option */
+#define OPT_LIST "hf:t:np:r:c:gs"
 
 /** Use the definition defined by David Titarenco
  *  On StackOverFlow http://stackoverflow.com/questions/3437404/min-and-max-in-c 
@@ -32,8 +42,18 @@
        __typeof__ (b) _b = (b); \
      _a > _b ? _a : _b; })
 
+/**
+ * Print the usage of the program
+ * %param name : name of the program
+ */
 void usage(char* name);
 
+/**
+ * Function that get all command line option and return those one into a structure
+ * %param argc : Total number of argument onto the command line
+ * %param argv : Contenant of all the command line
+ * %return     : Structure which contains all option given onto command line into this structure
+ */
 Option getOption(int argc, char** argv);
 
 #endif

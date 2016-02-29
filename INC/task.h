@@ -17,19 +17,54 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : task.h                                          */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef TASK
 #define TASK
 
 #include "task_pile_struct.h"
 
+/**
+ * Function that create a new task
+ * %param min : Column where the task will start
+ * %param max : Column where the task will end
+ * %return    : A new allocated task
+ */
 Task *newTask(int min, int max);
 
+/**
+ * Function which add a task to the pile
+ * %param tpi : task pile where we need to add the task
+ * %param t   : The task to add
+ */
 void insertTask(TaskPile *tpi, Task *t);
 
+/**
+ * Function which check if the pile is empty
+ * %param tp : Task pile to check
+ * %return   : true if the pile is empty
+ *             false otherwise
+ */
 bool isEmpty(TaskPile* tp); 
 
+/**
+ * Function which get a task
+ * %param tp : Task pile where we need to get a task
+ * %return   : A task of the task pile
+ */
 Task *getTask(TaskPile* tp);
 
+/**
+ * Private function that shouldn't be used [only use in thread.c]
+ * The definition of this function is in task.c [all information are there]
+ */
 void __freeTaskPile(TaskPile* tp);
 
 #endif 

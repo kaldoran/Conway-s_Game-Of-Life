@@ -17,11 +17,23 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : error.h                                         */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef OPTION_STRUCT
 #define OPTION_STRUCT
 
 #include <stdbool.h>
 
+/** 
+ * Structure that will contains all of the option 
+ */
 typedef struct Option {
     int max_tick;             /* How much tick we need to do            - Default : 100 */
     char* file_path;          /* Path to the file to load               - Default : "" */

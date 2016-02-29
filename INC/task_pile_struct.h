@@ -17,18 +17,33 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : task_pile_struct.h                              */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef TASK_PILE_STRUCT
 #define TASK_PILE_STRUCT
 
+/**
+ * A task consist into a start column and an ending column
+ */
 typedef struct Task {
-    unsigned int min;
-    unsigned int max;
+    unsigned int min;        /* Where the task need to start, i.e. column where start on board */
+    unsigned int max;        /* Where the task need to end,   i.e column where stop on board   */
 
-    struct Task* next_task;
+    struct Task* next_task;  /* Pointer to the next task */
 } Task;
 
+/**
+ * A task pile is a stack of task, i.e FILO
+ */
 typedef struct TaskPile {
-  Task *first;
+  Task *first;               /* Pointer on the first task of the task pile */
 } TaskPile;
 
 

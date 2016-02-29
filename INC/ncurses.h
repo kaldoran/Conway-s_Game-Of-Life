@@ -17,11 +17,26 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : ncurses.h                                       */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef NCURSES_H
 #define NCURSES_H
 
+/**
+ * Function that initialize NCurses
+ */
 void initNCurses();
 
+/**
+ * Function that end NCurses, i.e free memory associate with NCurse
+ */
 void endNCurses();
 
 #endif

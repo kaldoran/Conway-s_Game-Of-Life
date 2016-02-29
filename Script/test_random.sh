@@ -95,5 +95,3 @@ rm good.gol
 
 echo "";
 echo "[TEST] All Done : $AllSuccess";
-
-

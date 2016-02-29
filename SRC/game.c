@@ -26,10 +26,22 @@
 #include "game_struct.h"
 #include "memory.h"
 
+/**
+ * Private function that compute the position of the board given a x and a y
+ * %param x : Position on the X coordinate 
+ * %param y : Position on the Y coordinate
+ * %param g : Game where we need to compute the cell position
+ * %return  : Position of the cell associate with the X and Y coordinate
+ */
 int __position(unsigned int x, unsigned int y, Game* g) {
     return g->cols * y + x;
 }
 
+/**
+ * Private function that print a simple line
+ * %param g : Game structure which contains the information relative to the game
+ * %param pf : Pointer to a print function
+ */
 void __printLine(Game* g, int (*pf)(const char *, ...)) {
     unsigned int i = 0;
 
@@ -40,6 +52,11 @@ void __printLine(Game* g, int (*pf)(const char *, ...)) {
 
 }
 
+/**
+ * Private function that really print the board contenant 
+ * %param g : Game struct which contains the board to print
+ * %param pf : Pointer to a printing function
+ */
 void __gamePrint (Game* g, int (*pf)(const char *, ...)) {
     unsigned int x, y;
 
@@ -89,11 +106,23 @@ void gamePrintInfo(Game* g, Option o) {
     __gamePrint(g, printFunc);
 }
 
+/** 
+ * Private function that allocate a new board
+ * %param rows : Total number of rows onto the board
+ * %param cols : Total number of column onto the board
+ * %return     : Allocated array of char which will contains the board
+ */
 char* __newBoard(unsigned int rows, unsigned int cols) {
     char* board = NEW_ALLOC_K(rows * cols, char);
     return board;
 }
 
+/**
+ * Private function that create a new game
+ * %param rows : Total number of rows onto the new board
+ * %param cols : Total number of Column onto the new board
+ * %return     : Allocated game structure which contains all the information 
+ */
 Game* __newGame(unsigned int rows, unsigned int cols) {
     Game* g = NEW_ALLOC(Game);
     
@@ -134,7 +163,14 @@ Game* generateRandomBoard(Option o) {
     return g;
 }
 
-int __neightbourCell(unsigned int x, unsigned int y, Game *g) {
+/**
+ * Private function which compute the total number of neighbour of a cell
+ * %param x : X position of the cell on the board
+ * %param y : Y position of the cell on the board
+ * %param g : Game struct wich contains all information relative to the game
+ * %return  : Total number of neighbour of this cell
+ */
+int __neighbourCell(unsigned int x, unsigned int y, Game *g) {
     unsigned int total = 0;
     char *b = g->current_board;
 
@@ -156,14 +192,20 @@ int __neightbourCell(unsigned int x, unsigned int y, Game *g) {
     return total;
 }
 
+/**
+ * Private function which process a cell, i.e update the cell on the other board according to ome rules
+ * %param x : Position on X of the cell on the board
+ * %param y : Position on Y of the cell on the board
+ * %param g : Game struct which contains all information relative to the game
+ * %return  : New state of the cell in x / y coordinate.
+ */
 char __process(unsigned int x, unsigned int y, Game* g) {
-    unsigned int neightbour = __neightbourCell(x, y, g);    
+    unsigned int neightbour = __neighbourCell(x, y, g);    
 
     if ( neightbour < 2 || neightbour > 3 ) return DEAD_CELL;
     else if ( neightbour == 3 )             return ALIVE_CELL;
     else                                    return g->current_board[POS(x, y, g)];
 }
-
 
 void gameTick(Game *g, Task* t) {
 
@@ -175,7 +217,6 @@ void gameTick(Game *g, Task* t) {
 
     DEBUG_MSG("Game tick finish");
 }
-
 
 Game* loadBoard(char* name) { 
     char reader = ' ';

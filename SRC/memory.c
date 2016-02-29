@@ -20,6 +20,12 @@
 #include "error.h"
 #include "memory.h"
 
+/**
+ * Private function that board the allocation of an object
+ * %param total : Total number of object that we need to allocate 
+ * %param object_size : Size of the object which we need to allocate
+ * %return : Pointer on the memory associate with the new object
+ */
 void *__memAlloc(int total, size_t object_size) {
 
     void *p = calloc(total, object_size);

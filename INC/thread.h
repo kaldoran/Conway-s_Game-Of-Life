@@ -17,6 +17,15 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : thread.h                                        */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef THREAD
 #define THREAD
 
@@ -25,17 +34,45 @@
 #include "game_struct.h"
 #include "thread_struct.h"
 
-
+/**
+ * Function that create new thread information, this function also set the real number of usefull thread
+ * %param n : Total number of thread that need to be create
+ * %param g : Game struct which contains all information relative to the game where thread going to iterate
+ * %return  : Thread information containing all revelent information
+ */
 ThreadInfo *newThreadInfo(unsigned int n, Game *g);
 
+/**
+ * Function which free the thread info
+ * %param ti : Thread info to free
+ */
 void freeThreadInfo(ThreadInfo *ti);
 
+/**
+ * Function which create a new task
+ * %param ti : thread information which contains lock and all revelent information about thread
+ * %param fine_grained : Bool which say if we use the fine grained method or not
+ */
 void createTask(ThreadInfo *ti, bool fine_grained);
 
+/**
+ * Function that make the thread run [.ie broadcast a start message ]
+ * %param ti : Thread information which contains all revelent information about thread [ Mutex etc ]
+ */
 void runThread(ThreadInfo *ti); 
 
+/**
+ * Function that create N thread, according to the thread info struct
+ * %param ti : thread information structure which contains information about the thread
+ *             [ total number of thread / mutex etc ]
+ */
 void createNThread(ThreadInfo *ti);
 
+/**
+ * Function which stop all thread, this function make them run after said that they need to stop
+ * then it wait for all thread
+ * %param ti : Thread information struct which contains the list of thread
+ */
 void endNThread(ThreadInfo *ti); 
 
 #endif

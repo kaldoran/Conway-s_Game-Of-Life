@@ -38,6 +38,10 @@ void usage(char* name) {
     exit(EXIT_SUCCESS);
 }
 
+/**
+ * Private function that define the default value for the option
+ * %return : The option struct with the default value
+ */
 Option __setDefaultValue() {
     Option o;
     

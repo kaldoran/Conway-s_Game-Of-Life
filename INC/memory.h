@@ -17,15 +17,39 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : memory.h                                        */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef MEMORY_H
 #define MEMORY_H
 
 #include <stdlib.h>
 
+/**
+ * Function that allocate a single object
+ * %param OBJECT : Object type to allocate
+ * %return       : Pointer in memory associate with the object Type.
+ */
 #define NEW_ALLOC(OBJECT) (NEW_ALLOC_K(1, OBJECT))
 
+/**
+ * Function that allocate an array of the same Object
+ * %param K      : Total number to allocate
+ * %param OBJECT : Object type to allocate
+ * %return       : Pointer in memory associate with the object type.
+ */
 #define NEW_ALLOC_K(K, OBJECT) (__memAlloc(K, sizeof(OBJECT)))
 
+/**
+ * Private function that shouldn't be used 
+ * The definition of this function is in memory.c
+ */
 void *__memAlloc(int total, size_t object_size);
 
 #endif

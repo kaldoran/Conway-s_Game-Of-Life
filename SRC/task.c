@@ -62,6 +62,10 @@ Task *getTask(TaskPile *tp) {
     return t;
 }
 
+/**
+ * Private function that free the task pile and all remaining task if there is some
+ * %param tp : Pointer of the pile which we need to free
+ */
 void __freeTaskPile(TaskPile *tp) {
     while (!isEmpty(tp))
         free(getTask(tp));

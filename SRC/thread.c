@@ -45,7 +45,9 @@ ThreadInfo *newThreadInfo(unsigned int n, Game *g) {
     ti->plist =  NEW_ALLOC_K(n, pthread_t);
 
     if ( n > g->cols ) { /* If there is more thread than needed, then adjust the value */
-        fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols );
+        #ifdef PRINT
+            fprintf(stderr, "[INFO] %d thread is/are useless\n", n - g->cols );
+        #endif
         ti->n = g->cols; /* change default value */
     }
 
@@ -96,7 +98,11 @@ void createTask(ThreadInfo *ti, bool fine_grained) {
         ti->keep_task = true;
 }
 
-
+/**
+ * Private function which will lock the mutex, take a task and free the mutex
+ * %param ti : ThreadInfo struct which contains all of the mutex / lock etc
+ * %return   : A Task
+ */
 Task *__threadGetTask(ThreadInfo *ti) {
     Task *t = NULL;
 
@@ -107,6 +113,10 @@ Task *__threadGetTask(ThreadInfo *ti) {
     return t;
 }
 
+/**
+ * Private function which wait that all thread have finish there task
+ * %param ti : ThreadInfo structu which contains all information relative to thread
+ */
 void __waitTickEnd(ThreadInfo* ti) {
     while (ti->total_end != ti->n) { usleep(5000); }    
 }
@@ -122,6 +132,10 @@ void runThread(ThreadInfo* ti) {
     __waitTickEnd(ti); /* Wait all have finish before give hand to main */
 }
 
+/**
+ * Private function that wait for all thread
+ * %param ti : Thread info struct which contains all information relative to thread
+ */
 void __waitAllTick(ThreadInfo* ti) {
     pthread_mutex_lock(&ti->lock_end);
     ++ti->total_end;
@@ -132,6 +146,12 @@ void __waitAllTick(ThreadInfo* ti) {
     pthread_mutex_unlock(&ti->lock_end);
 }
 
+/**
+ * Private function that process a thread action
+ * When this function start, it wait for a broadcast to start
+ * Then process is task and either wait or process a new task
+ * %param ti : Thread info struct wich contains all information relative to thread
+ */
 void __processThread(ThreadInfo* ti) {
     Task *t = NULL;
     __waitAllTick(ti);

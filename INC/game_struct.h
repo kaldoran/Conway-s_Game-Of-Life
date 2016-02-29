@@ -17,9 +17,21 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301 USA.
  */
 
+/*---------------------------------------------------------- */
+/* AUTEUR : REYNAUD Nicolas                                  */
+/* FICHIER : game_struct.h                                   */
+/*                                                           */
+/* - Debug Maccro [C99 Convention]                           */
+/* - Quit maccro                                             */
+/*---------------------------------------------------------- */
+
+
 #ifndef GAME_STRUCT_H
 #define GAME_STRUCT_H
 
+/**
+ * Struct that represent a game
+ */
 typedef struct {
     char *current_board; /* The board as an array of 0's and 1's. */
     char *next_board;    /* The new board */
