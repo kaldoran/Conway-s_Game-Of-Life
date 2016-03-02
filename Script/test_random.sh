@@ -3,6 +3,7 @@
 # Do not use 0 or a value below 0 for MAX_ITERATION, you will get an infinit loop
 readonly MAX_THREAD=20
 readonly MAX_ITERATION=100
+readonly PROG="./BIN/GameOfLife"
 
 # Check the diff between 2 file, is there is some it print them
 function diffOutput {
@@ -24,7 +25,6 @@ function randMax {
     echo $rand_max;
 }
 
-PROG=./BIN/GameOfLife
 if ! [ -e $PROG ]; then
     echo "[TEST] Compilation : START"
     make rebuild > /dev/null
