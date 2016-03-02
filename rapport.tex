@@ -119,8 +119,12 @@ Les résultats expérimentaux pour les valeurs suivantes : 10, 50, 100, 500, 100
     \caption{Accélération absolue pour une grille de 10 x 10}
   \end{minipage}
 \end{figure}
+\hfill \break
+Ces premiers résultats ne sont pas très concluant, en effet, on remarque une accélération très faible pour les deux programmes avec des threads. Pour cause, dans ce problème il n'y a aucun intérêt de lancer  des threads qui sont très couteux en ressource pour effectué des calcules sur une grille de 10 x 10.
 
-\begin{figure}[!tbp]
+Ainsi ici on remarque que les temps d'exécutions sont presque les mêmes, même si les versions avec des threads sont plus lentes ( dût au fait du lancement des threads ).\\
+On remarque également une stabilisation des temps à partir de 8 threads, en effet au dessus de 10 threads le nombre de thread demandé est ramené à 10.
+\begin{figure}[h]
   \centering
   \begin{minipage}[b]{0.49\textwidth}
 	\includegraphics[width=\textwidth]{./Time/size_50_time.png}
@@ -132,8 +136,10 @@ Les résultats expérimentaux pour les valeurs suivantes : 10, 50, 100, 500, 100
     \caption{Accélération absolue pour une grille de 50 x 50}
   \end{minipage}
 \end{figure}
+Dans ces mesures, on remarque que le temps d'exécution augmente proportionnellement au nombre de thread, en effet il faut de plus en plus de temps pour crée un nombre conséquent de thread.\\
+Ici l'accélération est un peu mieux que dans l'exemple précédent, cependant je test est encore trop petit pour parallélisé les calcules.\\
 
-\begin{figure}[!tbp]
+\begin{figure}[h]
   \centering
   \begin{minipage}[b]{0.49\textwidth}
 	\includegraphics[width=\textwidth]{./Time/size_100_time.png}
@@ -146,7 +152,12 @@ Les résultats expérimentaux pour les valeurs suivantes : 10, 50, 100, 500, 100
   \end{minipage}
 \end{figure}
 
-\begin{figure}[!tbp]
+Encore une fois, les temps d'exécutions augmente proportionnellement avec le nombre de thread, ont remarque également que le temps entre la méthode à granularité fine et la granularité grossière est assez grande au début, puis diminue ensuite avec un nombre de thread plus conséquent.\\
+En effet, au départ le manque de thread implique donc que un ou plusieurs threads doivent effectué plusieurs taches à la suite dès qu'ils ont fini leurs taches. \\
+Cependant l'accélération est meilleur sur cette endroit la (dans le cas d'une granularité fine). \\
+
+\newpage
+\begin{figure}[h]
   \centering
   \begin{minipage}[b]{0.49\textwidth}
 	\includegraphics[width=\textwidth]{./Time/size_500_time.png}
@@ -158,8 +169,10 @@ Les résultats expérimentaux pour les valeurs suivantes : 10, 50, 100, 500, 100
     \caption{Accélération absolue pour une grille de 500 x 500}
   \end{minipage}
 \end{figure}
+Ici on remarque que les temps d'exécution différent de plus en plus entre la granularité fine et grossière, on remarque également que au départ, le temps d'exécution est presque le même entre le temps séquentiel et le temps de la granularité grossière. En effet, sur de tels temps d'exécution le fait de lancer un seul thread est négligeable par rapport au temps total d'exécution.\\
+Ainsi sur un tel problème une méthode séquentiel et presque équivalente à un problème-multi thread (ou avec peu de thread) avec une granularité grossière. \\
 
-\begin{figure}[!tbp]
+\begin{figure}[h]
   \centering
   \begin{minipage}[b]{0.49\textwidth}
 	\includegraphics[width=\textwidth]{./Time/size_1000_time.png}
@@ -172,7 +185,13 @@ Les résultats expérimentaux pour les valeurs suivantes : 10, 50, 100, 500, 100
   \end{minipage}
 \end{figure}
 
-\begin{figure}[!tbp]
+Avec ce teste, on remarque des résultats beaucoup plus concluant, on remarque notamment une augmentation énorme du temps d'exécution avec la méthode à granularité fine. En effet, il n'y a pas assez de thread pour traiter les 1000 taches en parallèle, obligeant ainsi chaque thread à, à chaque tick, reprendre une tache dans la liste des taches jusqu'à vidé celle ci. Ainsi il faut que les T premières taches soit finie avant de passer au T' taches suivantes.\\
+
+On remarque également une "fusion" avec un petit nombre de thread des courbes de la version séquentiel et celle à granularité grossière. En effet, le temps pris pour la création des taches / threads sont redue mineur par rapport au temps total d'exécution. \\
+Cette remarque s'applique également pour l'accélération absolue, ainsi on remarque une très bonne accélération avec la méthode multi-thread à granularité grossière étant donné qu'il revient pratiquement au problème séquentiel (avec la création des threads).
+
+
+\begin{figure}[h]
   \centering
   \begin{minipage}[b]{0.49\textwidth}
 	\includegraphics[width=\textwidth]{./Time/size_2000_time.png}
@@ -184,4 +203,21 @@ Les résultats expérimentaux pour les valeurs suivantes : 10, 50, 100, 500, 100
     \caption{Accélération absolue pour une grille de 2000 x 2000}
   \end{minipage}
 \end{figure}
+\newpage
+Pour ce test, l'analyse est analogue à celle d'une grille de 1000 x 1000,
+seule différence l'augmentation des temps d'exécution.
+
+\underline{A noter} : Je ne suis pas aller au delà d'une grille de 2000 x 2000 étant donné qu'il m'a fallut plus de 40 minutes pour ne serais-ce que généré la grille, puis une autre 30 - 40 aines de minutes pour avoir la création des graphes ( et donc l'exécution complète de toutes les versions du programme).
+
+\section{Conclusion}
+
+En somme, on remarque que la méthode à granularité grossière est plus adapté pour de grande taille de grille. On remarque également qu'il n'y a pas d'intérêt de parallélisé des grilles avec moins de 50 éléments. \\
+
+Enfin, on remarque que la granularité fine n'est pas adapté à ce problème étant donné le temps de tache à effectué par chaque thread, et donc la granularité fine n'a pas d'intérêt dans ce genre de problème.
+
+\section{Fuites mémoires}
+Je tenais à faire une section sur ce document présentant une chose où j'ai passé pas mal de temps par conscience professionnelle. Un point qui me tien à cœurs est le fait de n'avoir aucune fuite mémoire dans le cadre normal d'exécution du programme. Mes programmes ont donc tous était testé avec valgrind afin de garantir aucune fuite mémoire.\\
+
+Je vous invite donc à voir le fichier Valgrind\_log présent à la racine du répertoire.
+
 \end{document}

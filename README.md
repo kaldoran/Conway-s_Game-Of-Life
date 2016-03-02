@@ -35,6 +35,5 @@ Debug information will be print even if you don't use display version of the pro
     See : ./BIN/GameOfLife -h
 
 
+#### /!\ All script should be launch from . [./Script/file]
 ### /!\ Please be sure to read the License file, this license apply to all files.
-
-

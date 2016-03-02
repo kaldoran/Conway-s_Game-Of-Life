@@ -29,7 +29,7 @@ Task *newTask(int min, int max) {
     if ( min > max )
         QUIT_MSG("max need to greater than min\n");
 
-    t = NEW_ALLOC(t);
+    t = NEW_ALLOC(Task);
     t->min = min;
     t->max = max;
     t->next_task = NULL;

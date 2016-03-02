@@ -173,6 +173,10 @@ void __processThread(ThreadInfo* ti) {
             __waitAllTick(ti);
     }
 
+    /* If we keep task then free that one are associated with the thread */
+    if ( ti->keep_task ) 
+        free(t);
+
     pthread_mutex_lock(&ti->lock_end);
     ++ti->total_end;
     pthread_mutex_unlock(&ti->lock_end);
