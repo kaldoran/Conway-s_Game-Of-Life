@@ -21,9 +21,6 @@
 /*---------------------------------------------------------- */
 /* AUTEUR : REYNAUD Nicolas                                  */
 /* FICHIER : error.h                                         */
-/*                                                           */
-/* - Debug Maccro [C99 Convention]                           */
-/* - Quit maccro                                             */
 /*---------------------------------------------------------- */
 
 #ifndef ERROR_H
@@ -52,13 +49,13 @@
  * %param MSG : String to print 
  * %param ... : List of param [ for example if want to print variable value ]
  */
-#define QUIT_MSG(MSG, ...)                                                                                                  \
-    do {                                                                                                                    \
-        DEBUG_MSG(MSG, ##__VA_ARGS__)                                                                                       \
-        fprintf(stderr, "[FATAL ERROR] ");                                                                                  \
-        fprintf(stderr, MSG, ## __VA_ARGS__);                                                                               \
-        perror(NULL);                                                                                                       \
-        exit(EXIT_FAILURE);                                                                                                 \
+#define QUIT_MSG(MSG, ...)                        \
+    do {                                          \
+        DEBUG_MSG(MSG, ##__VA_ARGS__)             \
+        fprintf(stderr, "[FATAL ERROR] ");        \
+        fprintf(stderr, MSG, ## __VA_ARGS__);     \
+        perror(NULL);                             \
+        exit(EXIT_FAILURE);                       \
     }while(0); 
 
 #endif /* ERROR_H included */

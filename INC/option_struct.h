@@ -20,11 +20,7 @@
 /*---------------------------------------------------------- */
 /* AUTEUR : REYNAUD Nicolas                                  */
 /* FICHIER : error.h                                         */
-/*                                                           */
-/* - Debug Maccro [C99 Convention]                           */
-/* - Quit maccro                                             */
 /*---------------------------------------------------------- */
-
 
 #ifndef OPTION_STRUCT
 #define OPTION_STRUCT

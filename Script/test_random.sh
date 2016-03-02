@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Do not use 0 or a value below 0 for MAX_ITERATION, you will get an infinit loop
+readonly MAX_THREAD=20
+readonly MAX_ITERATION=100
+
+# Check the diff between 2 file, is there is some it print them
 function diffOutput {
     if [ "$1" != "" ]; then
         echo "FAIL"; 
@@ -11,6 +16,7 @@ function diffOutput {
     fi;
 }
 
+# Rand between 1 and max [ fiven in parameter ]
 function randMax {
     rand_max=$(( $RANDOM % $1 ));
     if [ "$rand_max" -eq 0 ]; then rand_max=1; fi
@@ -18,8 +24,7 @@ function randMax {
     echo $rand_max;
 }
 
-PATH_FILE=`dirname $0`
-
+PROG=./BIN/GameOfLife
 if ! [ -e $PROG ]; then
     echo "[TEST] Compilation : START"
     make rebuild > /dev/null
@@ -31,9 +36,9 @@ if ! [ -e $PROG ]; then
 
     echo -e "[TEST] Compilation : SUCCESS\n";
 fi;
-cd $PATH_FILE
 
-TOTAL_TEST=5
+# Default value for TOTAL_TEST
+TOTAL_TEST=10
 if [ ! -z "$1" ]; then 
     if ! [[ "$1" =~ ^[1-9]||1[0-9]+$ ]]; then
         echo "$1 need to be an integer >0";
@@ -48,29 +53,31 @@ for (( i = 0; i < $TOTAL_TEST; i++ )); do
 
     echo -e "\n--------------"
     echo "[TEST] Start creating a random board";
-    ./createRandomBoard.sh 150 150
+    ./Script/createRandomBoard.sh 150 150
     echo "[TEST] End of creation";
 
-    TOTAL_ITERATION=$(randMax 100);
-    DEFAULT_OPT="-s -f ../Script/random.gol -t $TOTAL_ITERATION"
+    TOTAL_ITERATION=$(randMax $MAX_ITERATION);
+    DEFAULT_OPT="-s -f ./Script/random.gol -t $TOTAL_ITERATION"
 
     echo -e "\n--------------"
     echo "[TEST] Let's start with $TOTAL_ITERATION iteration [$(( i + 1 ))/$TOTAL_TEST]";
     echo -e "--------------"
 
     # --------------------------------------------
+    # Create the good file to compare with
+    # --------------------------------------------
 
     echo -e "\n[TEST] Sequential : START";
-    ../BIN/GameOfLife $DEFAULT_OPT
+    $PROG $DEFAULT_OPT > /dev/null
     mv output.gol good.gol
     echo "[TEST] Sequential : End";
 
     # --------------------------------------------
 
-    RANDOM_THREAD=$(randMax 20);
+    RANDOM_THREAD=$(randMax $MAX_THREAD);
 
     echo -e "\n[TEST] $RANDOM_THREAD thread fined grained : START";
-    ../BIN/GameOfLife $DEFAULT_OPT -p $RANDOM_THREAD -g
+    $PROG $DEFAULT_OPT -p $RANDOM_THREAD -g > /dev/null
     DIFF=$(diff good.gol output.gol 2>&1)
     echo -n "[TEST] $RANDOM_THREAD thread fined grained : ";
 
@@ -79,10 +86,10 @@ for (( i = 0; i < $TOTAL_TEST; i++ )); do
 
     # ------------------------------------------
 
-    RANDOM_THREAD=$(randMax 20);
+    RANDOM_THREAD=$(randMax $MAX_THREAD);
 
     echo -e "\n[TEST] $RANDOM_THREAD thread average grained : START";
-    ../BIN/GameOfLife $DEFAULT_OPT -p $RANDOM_THREAD
+    $PROG $DEFAULT_OPT -p $RANDOM_THREAD > /dev/null
     DIFF=$(diff good.gol output.gol 2>&1)
     echo -n "[TEST] $RANDOM_THREAD thread average grained : ";
 

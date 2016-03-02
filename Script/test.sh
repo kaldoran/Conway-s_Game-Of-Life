@@ -34,7 +34,7 @@ input=("block.gol" "blinker.gol" "beacon.gol" "empty.gol" "toad.gol")
 # If you use odd number of iteration those file WON'T work [cause all of them got a period of 2 
 output=("block.gol" "blinker.gol" "beacon.gol" "empty.gol" "toad.gol")
 
-thread=(1 2 5 10)
+thread=(1 2 4 8 16)
 
 for (( i = 0; i < $(( ${#input[@]} - 1)) ; i++ )); do
 
@@ -51,7 +51,7 @@ for (( i = 0; i < $(( ${#input[@]} - 1)) ; i++ )); do
     
     echo -e "[TEST] Sequential : START";
     
-    $PROG $DEFAULT_OPT
+    $PROG $DEFAULT_OPT > /dev/null
     DIFF=$(diff output.gol $DIFF_FILE 2>&1)
        
     echo -n "[TEST] Sequential : ";
@@ -67,7 +67,7 @@ for (( i = 0; i < $(( ${#input[@]} - 1)) ; i++ )); do
         
         echo -e "[TEST] $i thread fined grained : START";
 
-        $PROG $DEFAULT_OPT -p $i -g
+        $PROG $DEFAULT_OPT -p $i -g > /dev/null
         DIFF=$(diff output.gol $DIFF_FILE 2>&1)
 
         echo -n "[TEST] $i thread fined grained : ";
@@ -86,7 +86,7 @@ for (( i = 0; i < $(( ${#input[@]} - 1)) ; i++ )); do
 
         echo -e "[TEST] $i thread average grained : START";
 
-        $PROG $DEFAULT_OPT -p $i
+        $PROG $DEFAULT_OPT -p $i > /dev/null
         DIFF=$(diff output.gol $DIFF_FILE 2>&1)
         
         echo -n "[TEST] $i thread average grained : ";

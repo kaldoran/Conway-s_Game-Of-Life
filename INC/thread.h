@@ -20,11 +20,7 @@
 /*---------------------------------------------------------- */
 /* AUTEUR : REYNAUD Nicolas                                  */
 /* FICHIER : thread.h                                        */
-/*                                                           */
-/* - Debug Maccro [C99 Convention]                           */
-/* - Quit maccro                                             */
 /*---------------------------------------------------------- */
-
 
 #ifndef THREAD
 #define THREAD

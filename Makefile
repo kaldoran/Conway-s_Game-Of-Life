@@ -28,16 +28,16 @@ OBJ = $(addsuffix .o, $(basename $(subst ${SRC_DIR}, ${OBJ_DIR}, ${SRC})))
 all: dir $(BIN_DIR)/$(BIN)
 
 TOTAL=10
-test-rand: rebuild
-test-rand:
+tests-rand: rebuild
+tests-rand:
 	./Script/test_random.sh $(TOTAL)
 
-test: rebuild
-test:
+tests: rebuild
+tests:
 	./Script/test.sh
 
-mesure: rebuild
-mesure:
+mesures: rebuild
+mesures:
 	./Script/mesure.sh
 
 display: CFLAGS += -DPRINT

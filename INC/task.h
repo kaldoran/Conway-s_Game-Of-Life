@@ -20,11 +20,7 @@
 /*---------------------------------------------------------- */
 /* AUTEUR : REYNAUD Nicolas                                  */
 /* FICHIER : task.h                                          */
-/*                                                           */
-/* - Debug Maccro [C99 Convention]                           */
-/* - Quit maccro                                             */
 /*---------------------------------------------------------- */
-
 
 #ifndef TASK
 #define TASK

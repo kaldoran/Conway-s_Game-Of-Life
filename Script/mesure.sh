@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PROG="./BIN/GameOfLife"
+
 if ! [ -e $PROG ]; then
     echo "[TEST] Compilation : START"
     make rebuild > /dev/null
@@ -13,37 +15,39 @@ if ! [ -e $PROG ]; then
 fi;
 
 grid_size=(10 50 100 500 1000 2000)
-# grid_size=(10 50 100 500 1000 5000)
-# number_thread=(1)
 number_thread=(1 2 4 8 16 32 64 128)
 
 mkdir -p Time
 
 for (( i = 0; i < ${#grid_size[@]}; i++ )); do
-	size=${grid_size[$i]};
+	
+    # Generate a grid of ${grid_size[$i]} size
+    size=${grid_size[$i]};
 	echo -e "\n[TEST] Start creating a random board [$size x $size]";
-	./Script/createRandomBoard.sh $size $size
-	echo "[TEST] End of creation";
+	./Script/createRandomBoard.sh $size $size strict
+	echo -e "[TEST] End of creation\n";
 
 	FILE="./Time/size_${size}"
     rm "./Time/*.dat" 2> /dev/null
-	
+
+    # Lets go generate the final grid for all threads number
     for (( j = 0; j < ${#number_thread[@]}; j++ )); do
 		thread=${number_thread[$j]};
 
-		echo "Completing data file for $thread threads";
+		echo "Completing data into file for $thread threads";
 		echo -n "$thread " >> "${FILE}.dat"
         echo -e "\t- Sequential";
-        ./BIN/GameOfLife -f ./Script/random.gol | awk '{printf "%f ", $3}' >> "${FILE}.dat"
+        $PROG -f ./Script/random.gol | awk '{printf "%f ", $3}' >> "${FILE}.dat"
         echo -e "\t- Thread avegare grained";
-        ./BIN/GameOfLife -p $thread -f ./Script/random.gol |  awk '{printf "%f ", $3}' >> "${FILE}.dat"
+        $PROG -p $thread -f ./Script/random.gol |  awk '{printf "%f ", $3}' >> "${FILE}.dat"
         echo -e "\t- Thread fined grained"
-        ./BIN/GameOfLife -p $thread -g -f ./Script/random.gol |  awk '{printf "%f ", $3}' >> "${FILE}.dat"
+        $PROG -p $thread -g -f ./Script/random.gol |  awk '{printf "%f ", $3}' >> "${FILE}.dat"
 
 		echo "" >> "${FILE}.dat"
         echo "";
     done
     
+    # First graph is the time graph
 	gnuplot <<- EOF
 		reset 
 		set style line 1 lc rgb "blue" lt 1 lw 2 pt 7
@@ -62,6 +66,7 @@ for (( i = 0; i < ${#grid_size[@]}; i++ )); do
 			 "${FILE}.dat" using 1:4:xtic(1) title "Thread fined" with linespoints ls 3
 	EOF
  
+    # And here is the absolute acceleration graph
     gnuplot <<- EOF
 		reset 
 		set style line 1 lc rgb "blue" lt 1 lw 2 pt 7
@@ -79,6 +84,4 @@ for (( i = 0; i < ${#grid_size[@]}; i++ )); do
 			 "${FILE}.dat" using 1:(\$2/\$3):xtic(1) title "Thread average" with linespoints ls 2,\
 			 "${FILE}.dat" using 1:(\$2/\$4):xtic(1) title "Thread fined" with linespoints ls 3
 	EOF
-    # set arrow from $size, graph 0 to $size, graph 1 nohead ls 4 
-    # set xtics add ("Max t" $size)
 done

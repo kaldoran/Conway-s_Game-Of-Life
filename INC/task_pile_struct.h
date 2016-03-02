@@ -20,11 +20,7 @@
 /*---------------------------------------------------------- */
 /* AUTEUR : REYNAUD Nicolas                                  */
 /* FICHIER : task_pile_struct.h                              */
-/*                                                           */
-/* - Debug Maccro [C99 Convention]                           */
-/* - Quit maccro                                             */
 /*---------------------------------------------------------- */
-
 
 #ifndef TASK_PILE_STRUCT
 #define TASK_PILE_STRUCT
