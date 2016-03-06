@@ -36,8 +36,8 @@
  * %param ... : List of param [ for example if want to print variable value ]
  */
 #ifdef DEBUG
-    #define DEBUG_MSG(MSG, ...)                                                                                                             \
-    do {                                                                                                                                    \
+    #define DEBUG_MSG(MSG, ...)   \
+    do {                          \
         fprintf(stderr, "\n\t[DEBUG] File : %s - Line : %d - Function : %s() : " MSG "\n", __FILE__, __LINE__, __func__, ## __VA_ARGS__);   \
     } while(0);
 #else

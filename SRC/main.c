@@ -80,8 +80,10 @@ int main(int argc, char* argv[]) {
             usleep(400000);
         #endif
     }
+    
     time = clock() - time;
     printf("Time : %f\n", (double)(time) / CLOCKS_PER_SEC);
+    
     if ( o.use_ncurses) /* If we use ncurses ( and then init it ) */
         endNCurses();   /* we need to clear display info */
 
