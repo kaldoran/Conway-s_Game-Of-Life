@@ -77,6 +77,9 @@ Option getOption(int argc, char **argv) {
                 break;
             case 'n': 
                 o.use_ncurses = true;
+                #ifndef PRINT
+                    printf("You need to compile with make display to use '-n' parameter\n");
+                #endif
                 break;
             case 'p':
                 o.nb_thread = MAX(atoi(optarg), 0);
