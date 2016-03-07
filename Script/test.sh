@@ -36,7 +36,7 @@ output=("block.gol" "blinker.gol" "beacon.gol" "empty.gol" "toad.gol")
 
 thread=(1 2 4 8 16)
 
-for (( i = 0; i < ${#input[@]}; i++ )); do
+for (( file = 0; file < ${#input[@]}; file++ )); do
 
     TOTAL_ITERATION=$(( $RANDOM % 100 )) 
     if [ $(( $TOTAL_ITERATION % 2 )) -ne 0 ]; then ((--TOTAL_ITERATION)); fi
@@ -60,17 +60,17 @@ for (( i = 0; i < ${#input[@]}; i++ )); do
     AllSucces+=$([ $? -eq 0 ] && echo "." || echo "#")
 
     echo -e "\n--------------";
-    echo "Multi thread : ";
+    echo "Multi thread fined grained : ";
     echo -e "--------------\n";
 
     for (( j = 0; j < ${#thread[@]}; j++ )); do
         
-        echo -e "[TEST] $j thread fined grained : START";
+        echo -e "[TEST] ${thread[$j]} thread fined grained : START";
 
-        $PROG $DEFAULT_OPT -p $j -g > /dev/null
+        $PROG $DEFAULT_OPT -p ${thread[$j]} -g > /dev/null
         DIFF=$(diff output.gol $DIFF_FILE 2>&1)
 
-        echo -n "[TEST] $i thread fined grained : ";
+        echo -n "[TEST] ${thread[$j]} thread fined grained : ";
 
         diffOutput $DIFF;
         AllSucces+=$([ $? -eq 0 ] && echo "." || echo "#")
@@ -79,17 +79,16 @@ for (( i = 0; i < ${#input[@]}; i++ )); do
     done;
 
     echo -e "--------------";
-    echo "Multi thread : ";
+    echo "Multi thread average grained: ";
     echo -e "--------------\n";
 
     for (( j = 0; j < ${#thread[@]}; j++ )); do
+        echo -e "[TEST] ${thread[$j]} thread average grained : START";
 
-        echo -e "[TEST] $j thread average grained : START";
-
-        $PROG $DEFAULT_OPT -p $j > /dev/null
+        $PROG $DEFAULT_OPT -p ${thread[$j]} > /dev/null
         DIFF=$(diff output.gol $DIFF_FILE 2>&1)
         
-        echo -n "[TEST] $j thread average grained : ";
+        echo -n "[TEST] ${thread[$j]} thread average grained : ";
         
         diffOutput $DIFF;
         AllSucces+=$([ "$DIFF" == "" ] && echo "." || echo "#")
